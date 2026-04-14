@@ -6,15 +6,15 @@ class Condition(Enum):
     SECTOR = 1
     BAR_HORIZONTAL = 2
     BAR_VERTICAL = 3
-    CIRCLE = 4
+    RING = 4
 
     @staticmethod
     def generate_condition_list():
         conditions = [
             Condition.SECTOR,
-            Condition.BAR_HORIZONTAL,
-            Condition.BAR_VERTICAL,
-            Condition.CIRCLE
+            #Condition.BAR_HORIZONTAL,
+            #Condition.BAR_VERTICAL,
+            Condition.RING
         ]
         list_conditions = conditions * 5
         random.shuffle(list_conditions)

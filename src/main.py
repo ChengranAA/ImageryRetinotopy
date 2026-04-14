@@ -1,15 +1,13 @@
-from _typeshed import ExcInfo
-from psychopy import visual, core
-import psychtoolbox as ptb
-from psychopy import sound
+from psychopy import prefs
 import sys
 from condition import Condition
 from experiment import Experiment
+prefs.hardware['audioDevice'] = ["PTB"]
 
 # add current directory to path
 sys.path.append('./src')
 
-test_trial = [Condition.SECTOR]
+test_trial = [Condition.RING, Condition.SECTOR, Condition.SECTOR, Condition.RING]
 
 current_exp = Experiment()
 current_exp.run_experiment(test_trial)

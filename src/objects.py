@@ -1,14 +1,11 @@
 from dataclasses import dataclass, field
 from typing import ClassVar
-
-from matplotlib import image
-from psychopy import visual
-
+from psychopy import visual, sound
 
 @dataclass
 class Object:
-    window_size: tuple[int, int] = (500, 500)
-    window_fullscr: bool = False
+    window_size: tuple[int, int] = (1080, 720)
+    window_fullscr: bool = True
     window_units: str = "pix"
 
     bullseye_inner_radius: float = 5
@@ -19,6 +16,11 @@ class Object:
     sector_image_dir: str = "../stimuli/sectors_a_pilot"
     sector_image_extension: str = ".png"
     sector_grid_path: str = "../stimuli/sector_grid_a_pilot.png"
+
+    ring_image_dir: str = "../stimuli/sectors_d"
+    ring_image_extension: str = ".png"
+    ring_grid_path: str = "../stimuli/sector_grid_d.png"
+
 
     win: visual.Window = field(init=False)
     bullseye_inner: visual.Circle = field(init=False)
@@ -33,11 +35,21 @@ class Object:
         *SECTORS_COUNTERCLOCKWISE[:0:-1],
     ]
 
+    _RINGS: ClassVar[list[str]] = [
+        f"sector_d_{i:02d}" for i in range(5)
+    ]
+    _REVERSE_RINGS: ClassVar[list[str]] = _RINGS.copy()
+    _REVERSE_RINGS.pop()
+    _REVERSE_RINGS.reverse()
+
+    RINGS: ClassVar[list[str]] = _RINGS + _REVERSE_RINGS
+
     def __post_init__(self) -> None:
         self.win = visual.Window(
             size=self.window_size,
             fullscr=self.window_fullscr,
             units=self.window_units,
+            backgroundImage="../stimuli/noise_gaussian_1920x1080.png"
         )
 
         # Create drawables using the instance window
@@ -54,10 +66,14 @@ class Object:
             lineColor=None,
         )
 
+        self.sound1 = sound.Sound(value = 440, secs = 0.250, stereo=True)
+        self.sound2 = sound.Sound(value = 880, secs = 0.250, stereo=True)
+
         self.sector_stims = [
             visual.ImageStim(
                 self.win,
                 image=f"{self.sector_image_dir}/{sector_name}{self.sector_image_extension}",
+                opacity = 1.0
             )
             for sector_name in self.SECTORS_CLOCKWISE
         ]
@@ -65,6 +81,22 @@ class Object:
         self.sector_grid = visual.ImageStim(
             self.win,
             image=self.sector_grid_path
+        )
+
+
+        self.ring_stims = [
+            visual.ImageStim(
+                self.win,
+                image=f"{self.ring_image_dir}/{ring_name}{self.ring_image_extension}",
+                opacity = 1.0
+            )
+            for ring_name in self.RINGS
+        ]
+
+
+        self.ring_grid = visual.ImageStim(
+            self.win,
+            image=self.ring_grid_path
         )
 
 if __name__ == "__main__":
