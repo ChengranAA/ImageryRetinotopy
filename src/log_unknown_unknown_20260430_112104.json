@@ -1,0 +1,3477 @@
+[
+  {
+    "time": 51.6677034580498,
+    "event": "dlg_shown",
+    "subject_id": null,
+    "experiment_type": null,
+    "tr": null
+  },
+  {
+    "time": 53.25266900000861,
+    "event": "experiment_start",
+    "total_trials": 10
+  },
+  {
+    "time": 53.25267545803217,
+    "event": "rest_start",
+    "duration": 1
+  },
+  {
+    "time": 53.25827141699847,
+    "event": "rest_flip",
+    "flip_time": 53.25267725001322
+  },
+  {
+    "time": 54.25828404200729,
+    "event": "rest_end"
+  },
+  {
+    "time": 54.258294208033476,
+    "event": "next_trial",
+    "trial_number": 1,
+    "condition": "RING"
+  },
+  {
+    "time": 54.25829825003166,
+    "event": "trial_start",
+    "condition": "RING"
+  },
+  {
+    "time": 54.258304042043164,
+    "event": "reference_phase_start",
+    "condition": "RING",
+    "stim_count": 11
+  },
+  {
+    "time": 54.268705583002884,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 0,
+    "opacity": 0.9181818181818182,
+    "sound": "sound2",
+    "flip_time": 54.26870166702429
+  },
+  {
+    "time": 56.274746750015765,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 1,
+    "opacity": 0.8363636363636364,
+    "sound": "sound1",
+    "flip_time": 56.27474325004732
+  },
+  {
+    "time": 58.280700292030815,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 2,
+    "opacity": 0.7545454545454546,
+    "sound": "sound1",
+    "flip_time": 58.28069675003644
+  },
+  {
+    "time": 60.2880039170268,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 3,
+    "opacity": 0.6727272727272728,
+    "sound": "sound1",
+    "flip_time": 60.28800070803845
+  },
+  {
+    "time": 62.2941450420185,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 4,
+    "opacity": 0.590909090909091,
+    "sound": "sound1",
+    "flip_time": 62.294140625046566
+  },
+  {
+    "time": 64.29993341700174,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 5,
+    "opacity": 0.5090909090909093,
+    "sound": "sound1",
+    "flip_time": 64.29992958303774
+  },
+  {
+    "time": 66.30625058303121,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 6,
+    "opacity": 0.42727272727272747,
+    "sound": "sound1",
+    "flip_time": 66.30624525004532
+  },
+  {
+    "time": 68.31220341700828,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 7,
+    "opacity": 0.3454545454545457,
+    "sound": "sound1",
+    "flip_time": 68.31220020801993
+  },
+  {
+    "time": 70.31775654200464,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 8,
+    "opacity": 0.2636363636363639,
+    "sound": "sound1",
+    "flip_time": 70.3177533330163
+  },
+  {
+    "time": 72.32413237501169,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 9,
+    "opacity": 0.18181818181818207,
+    "sound": "sound1",
+    "flip_time": 72.32412600005046
+  },
+  {
+    "time": 74.32975791703211,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 10,
+    "opacity": 0.10000000000000026,
+    "sound": "sound1",
+    "flip_time": 74.32974970800569
+  },
+  {
+    "time": 76.32977629202651,
+    "event": "imagery_phase_start",
+    "condition": "RING"
+  },
+  {
+    "time": 76.33500474999892,
+    "event": "imagery_phase_flip",
+    "condition": "RING",
+    "flip_time": 76.3350015830365
+  },
+  {
+    "time": 76.33500783302588,
+    "event": "imagery_loop1_start",
+    "condition": "RING"
+  },
+  {
+    "time": 76.33507429203019,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 78.33519883302506,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 80.3352905830252,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 82.3354182500043,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 84.33551704202546,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 86.3356540420209,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 88.33577750000404,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 90.33586454205215,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 92.33601804199861,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 94.33611595805269,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 96.336192375049,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 98.3362460420467,
+    "event": "imagery_loop2_start",
+    "condition": "RING"
+  },
+  {
+    "time": 98.33632000000216,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 100.33638633304508,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 102.33649995800806,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 104.336589500017,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 106.33668191701872,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 108.33679537504213,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 110.33687933301553,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 112.33693500002846,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 114.33707429200877,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 116.33717083302327,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 118.3372698330204,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 120.33729987504194,
+    "event": "trial_end",
+    "condition": "RING"
+  },
+  {
+    "time": 120.33808470802614,
+    "event": "rest_start",
+    "duration": 1.0
+  },
+  {
+    "time": 120.34377545805182,
+    "event": "rest_flip",
+    "flip_time": 120.33808779204264
+  },
+  {
+    "time": 121.34382708300836,
+    "event": "rest_end"
+  },
+  {
+    "time": 121.34383920801338,
+    "event": "next_trial",
+    "trial_number": 2,
+    "condition": "RING"
+  },
+  {
+    "time": 121.34384370804764,
+    "event": "trial_start",
+    "condition": "RING"
+  },
+  {
+    "time": 121.34385166701395,
+    "event": "reference_phase_start",
+    "condition": "RING",
+    "stim_count": 11
+  },
+  {
+    "time": 121.34789570805151,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 0,
+    "opacity": 0.9181818181818182,
+    "sound": "sound2",
+    "flip_time": 121.34789241704857
+  },
+  {
+    "time": 123.35364462505095,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 1,
+    "opacity": 0.8363636363636364,
+    "sound": "sound1",
+    "flip_time": 123.35364141705213
+  },
+  {
+    "time": 125.35972091701115,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 2,
+    "opacity": 0.7545454545454546,
+    "sound": "sound1",
+    "flip_time": 125.35971729201265
+  },
+  {
+    "time": 127.3654246670194,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 3,
+    "opacity": 0.6727272727272728,
+    "sound": "sound1",
+    "flip_time": 127.3654215830029
+  },
+  {
+    "time": 129.37156012502965,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 4,
+    "opacity": 0.590909090909091,
+    "sound": "sound1",
+    "flip_time": 129.3715568750049
+  },
+  {
+    "time": 131.37739404203603,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 5,
+    "opacity": 0.5090909090909093,
+    "sound": "sound1",
+    "flip_time": 131.37739054200938
+  },
+  {
+    "time": 133.38328679202823,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 6,
+    "opacity": 0.42727272727272747,
+    "sound": "sound1",
+    "flip_time": 133.38328333303798
+  },
+  {
+    "time": 135.38879262504634,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 7,
+    "opacity": 0.3454545454545457,
+    "sound": "sound1",
+    "flip_time": 135.38878950005164
+  },
+  {
+    "time": 137.39433395804372,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 8,
+    "opacity": 0.2636363636363639,
+    "sound": "sound1",
+    "flip_time": 137.39433054201072
+  },
+  {
+    "time": 139.40048358304193,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 9,
+    "opacity": 0.18181818181818207,
+    "sound": "sound1",
+    "flip_time": 139.40047904202947
+  },
+  {
+    "time": 141.40637687500566,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 10,
+    "opacity": 0.10000000000000026,
+    "sound": "sound1",
+    "flip_time": 141.4063699580147
+  },
+  {
+    "time": 143.40639591700165,
+    "event": "imagery_phase_start",
+    "condition": "RING"
+  },
+  {
+    "time": 143.41248029202688,
+    "event": "imagery_phase_flip",
+    "condition": "RING",
+    "flip_time": 143.41247645800468
+  },
+  {
+    "time": 143.41248458303744,
+    "event": "imagery_loop1_start",
+    "condition": "RING"
+  },
+  {
+    "time": 143.41255358303897,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 145.4126122080488,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 147.41270341700874,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 149.4128277080017,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 151.41294125001878,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 153.41299287503352,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 155.4130922500044,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 157.41316875000484,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 159.4133045830531,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 161.4133715830394,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 163.41346650000196,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 165.4135309170233,
+    "event": "imagery_loop2_start",
+    "condition": "RING"
+  },
+  {
+    "time": 165.41364462504862,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 167.41374779201578,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 169.41385250003077,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 171.41394366702298,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 173.41400200000498,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 175.41411791701103,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 177.4142015830148,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 179.41429891705047,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 181.41438904200913,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 183.41446870804066,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 185.4146098330384,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 187.41466683300678,
+    "event": "trial_end",
+    "condition": "RING"
+  },
+  {
+    "time": 187.41523345804308,
+    "event": "rest_start",
+    "duration": 1.0
+  },
+  {
+    "time": 187.42092654202133,
+    "event": "rest_flip",
+    "flip_time": 187.41523616702762
+  },
+  {
+    "time": 188.4209794580238,
+    "event": "rest_end"
+  },
+  {
+    "time": 188.42098958301358,
+    "event": "next_trial",
+    "trial_number": 3,
+    "condition": "RING"
+  },
+  {
+    "time": 188.42099345801398,
+    "event": "trial_start",
+    "condition": "RING"
+  },
+  {
+    "time": 188.42100004199892,
+    "event": "reference_phase_start",
+    "condition": "RING",
+    "stim_count": 11
+  },
+  {
+    "time": 188.4251633330132,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 0,
+    "opacity": 0.9181818181818182,
+    "sound": "sound2",
+    "flip_time": 188.42516025004443
+  },
+  {
+    "time": 190.43026133300737,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 1,
+    "opacity": 0.8363636363636364,
+    "sound": "sound1",
+    "flip_time": 190.4302577500348
+  },
+  {
+    "time": 192.43623666703934,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 2,
+    "opacity": 0.7545454545454546,
+    "sound": "sound1",
+    "flip_time": 192.43623354204465
+  },
+  {
+    "time": 194.44219762500143,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 3,
+    "opacity": 0.6727272727272728,
+    "sound": "sound1",
+    "flip_time": 194.44219429203076
+  },
+  {
+    "time": 196.44863433303544,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 4,
+    "opacity": 0.590909090909091,
+    "sound": "sound1",
+    "flip_time": 196.44863070803694
+  },
+  {
+    "time": 198.4545700000017,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 5,
+    "opacity": 0.5090909090909093,
+    "sound": "sound1",
+    "flip_time": 198.4545661250013
+  },
+  {
+    "time": 200.4605435830308,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 6,
+    "opacity": 0.42727272727272747,
+    "sound": "sound1",
+    "flip_time": 200.46053966705222
+  },
+  {
+    "time": 202.4660901669995,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 7,
+    "opacity": 0.3454545454545457,
+    "sound": "sound1",
+    "flip_time": 202.46608650003327
+  },
+  {
+    "time": 204.4717340420466,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 8,
+    "opacity": 0.2636363636363639,
+    "sound": "sound1",
+    "flip_time": 204.47173008305253
+  },
+  {
+    "time": 206.47758375003468,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 9,
+    "opacity": 0.18181818181818207,
+    "sound": "sound1",
+    "flip_time": 206.47758033301216
+  },
+  {
+    "time": 208.4833626250038,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 10,
+    "opacity": 0.10000000000000026,
+    "sound": "sound1",
+    "flip_time": 208.48335891700117
+  },
+  {
+    "time": 210.48340308305342,
+    "event": "imagery_phase_start",
+    "condition": "RING"
+  },
+  {
+    "time": 210.48918800003594,
+    "event": "imagery_phase_flip",
+    "condition": "RING",
+    "flip_time": 210.48918425000738
+  },
+  {
+    "time": 210.48919191700406,
+    "event": "imagery_loop1_start",
+    "condition": "RING"
+  },
+  {
+    "time": 210.48925879201852,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 212.48932537500514,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 214.48938833305147,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 216.48948508303147,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 218.4895760830259,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 220.4897441250505,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 222.48980333301006,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 224.48989216703922,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 226.48998004203895,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 228.4900597500382,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 230.49017754202941,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 232.49022970802616,
+    "event": "imagery_loop2_start",
+    "condition": "RING"
+  },
+  {
+    "time": 232.49028170801466,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 234.49039770802483,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 236.49050612503197,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 238.49057987501146,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 240.49064520804677,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 242.49076266703196,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 244.49086162500316,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 246.49096437502885,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 248.49103908304824,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 250.49108429200714,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 252.49118595803156,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 254.4912145420094,
+    "event": "trial_end",
+    "condition": "RING"
+  },
+  {
+    "time": 254.49165312503465,
+    "event": "rest_start",
+    "duration": 1.0
+  },
+  {
+    "time": 254.49746379203862,
+    "event": "rest_flip",
+    "flip_time": 254.4916559580015
+  },
+  {
+    "time": 255.4974795000162,
+    "event": "rest_end"
+  },
+  {
+    "time": 255.4974879170186,
+    "event": "next_trial",
+    "trial_number": 4,
+    "condition": "RING"
+  },
+  {
+    "time": 255.4974915830535,
+    "event": "trial_start",
+    "condition": "RING"
+  },
+  {
+    "time": 255.4974974580109,
+    "event": "reference_phase_start",
+    "condition": "RING",
+    "stim_count": 11
+  },
+  {
+    "time": 255.50118991703494,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 0,
+    "opacity": 0.9181818181818182,
+    "sound": "sound2",
+    "flip_time": 255.50118683301844
+  },
+  {
+    "time": 257.5071103750379,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 1,
+    "opacity": 0.8363636363636364,
+    "sound": "sound1",
+    "flip_time": 257.50710691703716
+  },
+  {
+    "time": 259.5130240000435,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 2,
+    "opacity": 0.7545454545454546,
+    "sound": "sound1",
+    "flip_time": 259.51301995804533
+  },
+  {
+    "time": 261.5192025420256,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 3,
+    "opacity": 0.6727272727272728,
+    "sound": "sound1",
+    "flip_time": 261.5191992500331
+  },
+  {
+    "time": 263.52484175004065,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 4,
+    "opacity": 0.590909090909091,
+    "sound": "sound1",
+    "flip_time": 263.5248386670137
+  },
+  {
+    "time": 265.5307915000012,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 5,
+    "opacity": 0.5090909090909093,
+    "sound": "sound1",
+    "flip_time": 265.5307875830331
+  },
+  {
+    "time": 267.5368245000136,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 6,
+    "opacity": 0.42727272727272747,
+    "sound": "sound1",
+    "flip_time": 267.53682066703914
+  },
+  {
+    "time": 269.54246075003175,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 7,
+    "opacity": 0.3454545454545457,
+    "sound": "sound1",
+    "flip_time": 269.5424570830073
+  },
+  {
+    "time": 271.54853470803937,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 8,
+    "opacity": 0.2636363636363639,
+    "sound": "sound1",
+    "flip_time": 271.54853100003675
+  },
+  {
+    "time": 273.554195625009,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 9,
+    "opacity": 0.18181818181818207,
+    "sound": "sound1",
+    "flip_time": 273.5541922500124
+  },
+  {
+    "time": 275.5600442920113,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 10,
+    "opacity": 0.10000000000000026,
+    "sound": "sound1",
+    "flip_time": 275.5600403750432
+  },
+  {
+    "time": 277.5600617500022,
+    "event": "imagery_phase_start",
+    "condition": "RING"
+  },
+  {
+    "time": 277.56591566704446,
+    "event": "imagery_phase_flip",
+    "condition": "RING",
+    "flip_time": 277.565912375052
+  },
+  {
+    "time": 277.56591933302116,
+    "event": "imagery_loop1_start",
+    "condition": "RING"
+  },
+  {
+    "time": 277.5660058330395,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 279.56606445804937,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 281.566113833047,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 283.56624354200903,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 285.56632225000067,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 287.56643587502185,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 289.56649629201274,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 291.56655629200395,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 293.56665516702924,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 295.566810792021,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 297.5669150419999,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 299.56697254203027,
+    "event": "imagery_loop2_start",
+    "condition": "RING"
+  },
+  {
+    "time": 299.56702499999665,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 301.5670837080106,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 303.5671965830261,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 305.56725625001127,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 307.56735000002664,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 309.5674188330304,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 311.5674662080128,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 313.56760350003606,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 315.5677320420509,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 317.5678607080481,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 319.56795608304674,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 321.5680057920399,
+    "event": "trial_end",
+    "condition": "RING"
+  },
+  {
+    "time": 321.5684967500274,
+    "event": "rest_start",
+    "duration": 1.0
+  },
+  {
+    "time": 321.57387979200576,
+    "event": "rest_flip",
+    "flip_time": 321.56849975005025
+  },
+  {
+    "time": 322.57389116700506,
+    "event": "rest_end"
+  },
+  {
+    "time": 322.5739032080164,
+    "event": "next_trial",
+    "trial_number": 5,
+    "condition": "RING"
+  },
+  {
+    "time": 322.5739075830206,
+    "event": "trial_start",
+    "condition": "RING"
+  },
+  {
+    "time": 322.5739147500135,
+    "event": "reference_phase_start",
+    "condition": "RING",
+    "stim_count": 11
+  },
+  {
+    "time": 322.57819675002247,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 0,
+    "opacity": 0.9181818181818182,
+    "sound": "sound2",
+    "flip_time": 322.57819383300375
+  },
+  {
+    "time": 324.58337870804826,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 1,
+    "opacity": 0.8363636363636364,
+    "sound": "sound1",
+    "flip_time": 324.5833744580159
+  },
+  {
+    "time": 326.5898642920074,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 2,
+    "opacity": 0.7545454545454546,
+    "sound": "sound1",
+    "flip_time": 326.5898608750431
+  },
+  {
+    "time": 328.5960934580071,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 3,
+    "opacity": 0.6727272727272728,
+    "sound": "sound1",
+    "flip_time": 328.59609016700415
+  },
+  {
+    "time": 330.6076889579999,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 4,
+    "opacity": 0.590909090909091,
+    "sound": "sound1",
+    "flip_time": 330.6076852080296
+  },
+  {
+    "time": 332.6142676669988,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 5,
+    "opacity": 0.5090909090909093,
+    "sound": "sound1",
+    "flip_time": 332.61426300002495
+  },
+  {
+    "time": 334.62095475004753,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 6,
+    "opacity": 0.42727272727272747,
+    "sound": "sound1",
+    "flip_time": 334.62095091701485
+  },
+  {
+    "time": 336.6274070420186,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 7,
+    "opacity": 0.3454545454545457,
+    "sound": "sound1",
+    "flip_time": 336.6274019580451
+  },
+  {
+    "time": 338.63419262500247,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 8,
+    "opacity": 0.2636363636363639,
+    "sound": "sound1",
+    "flip_time": 338.63418766704854
+  },
+  {
+    "time": 340.6403676250484,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 9,
+    "opacity": 0.18181818181818207,
+    "sound": "sound1",
+    "flip_time": 340.6403640000499
+  },
+  {
+    "time": 342.6460947500309,
+    "event": "reference_flip",
+    "condition": "RING",
+    "idx": 10,
+    "opacity": 0.10000000000000026,
+    "sound": "sound1",
+    "flip_time": 342.6460916250362
+  },
+  {
+    "time": 344.64615170803154,
+    "event": "imagery_phase_start",
+    "condition": "RING"
+  },
+  {
+    "time": 344.65197162504774,
+    "event": "imagery_phase_flip",
+    "condition": "RING",
+    "flip_time": 344.6519684170489
+  },
+  {
+    "time": 344.6519746250124,
+    "event": "imagery_loop1_start",
+    "condition": "RING"
+  },
+  {
+    "time": 344.6520469580428,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 346.6521396670141,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 348.6522406670265,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 350.6523827080382,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 352.652462750033,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 354.652596458036,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 356.65268395800376,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 358.6528400420211,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 360.65291895804694,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 362.6530036670156,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 364.6531079580309,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 1,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 366.65316679200623,
+    "event": "imagery_loop2_start",
+    "condition": "RING"
+  },
+  {
+    "time": 366.6532207080163,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 368.6533452500007,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 370.6534332919982,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 372.65350087505067,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 374.6536112080212,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 376.6536915420438,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 378.6537551250076,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 380.6538622920052,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 382.65393645805307,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 384.6540422080434,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 386.6541165000526,
+    "event": "imagery_sound",
+    "condition": "RING",
+    "loop": 2,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 388.65415258303983,
+    "event": "trial_end",
+    "condition": "RING"
+  },
+  {
+    "time": 388.6546067080344,
+    "event": "rest_start",
+    "duration": 1.0
+  },
+  {
+    "time": 388.66019220801536,
+    "event": "rest_flip",
+    "flip_time": 388.65460966702085
+  },
+  {
+    "time": 389.6602072500391,
+    "event": "rest_end"
+  },
+  {
+    "time": 389.6602263750392,
+    "event": "next_trial",
+    "trial_number": 6,
+    "condition": "SECTOR"
+  },
+  {
+    "time": 389.6602304170374,
+    "event": "trial_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 389.660236124997,
+    "event": "reference_phase_start",
+    "condition": "SECTOR",
+    "stim_count": 12
+  },
+  {
+    "time": 389.664784624998,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 0,
+    "opacity": 0.925,
+    "sound": "sound2",
+    "flip_time": 389.66477995802416
+  },
+  {
+    "time": 391.66949595802,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 1,
+    "opacity": 0.8500000000000001,
+    "sound": "sound1",
+    "flip_time": 391.66949200001545
+  },
+  {
+    "time": 393.67497750004986,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 2,
+    "opacity": 0.7750000000000001,
+    "sound": "sound1",
+    "flip_time": 393.67497429205105
+  },
+  {
+    "time": 395.6810210420517,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 3,
+    "opacity": 0.7000000000000002,
+    "sound": "sound1",
+    "flip_time": 395.68101679201936
+  },
+  {
+    "time": 397.68657841702225,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 4,
+    "opacity": 0.6250000000000002,
+    "sound": "sound1",
+    "flip_time": 397.6865747080301
+  },
+  {
+    "time": 399.69280004204484,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 5,
+    "opacity": 0.5500000000000003,
+    "sound": "sound1",
+    "flip_time": 399.69279600004666
+  },
+  {
+    "time": 401.69863745803013,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 6,
+    "opacity": 0.47500000000000026,
+    "sound": "sound1",
+    "flip_time": 401.6986344580073
+  },
+  {
+    "time": 403.7042311670375,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 7,
+    "opacity": 0.40000000000000024,
+    "sound": "sound1",
+    "flip_time": 403.70422812504694
+  },
+  {
+    "time": 405.71027908305405,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 8,
+    "opacity": 0.32500000000000023,
+    "sound": "sound1",
+    "flip_time": 405.71027570799924
+  },
+  {
+    "time": 407.71589208301157,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 9,
+    "opacity": 0.2500000000000002,
+    "sound": "sound1",
+    "flip_time": 407.71588908304693
+  },
+  {
+    "time": 409.7220891250181,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 10,
+    "opacity": 0.1750000000000002,
+    "sound": "sound1",
+    "flip_time": 409.72208466700977
+  },
+  {
+    "time": 411.7277124170214,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 11,
+    "opacity": 0.10000000000000021,
+    "sound": "sound1",
+    "flip_time": 411.7277093330049
+  },
+  {
+    "time": 413.72772325004917,
+    "event": "imagery_phase_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 413.73285270802444,
+    "event": "imagery_phase_flip",
+    "condition": "SECTOR",
+    "flip_time": 413.73285000002943
+  },
+  {
+    "time": 413.7328551670071,
+    "event": "imagery_loop1_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 413.73291175003396,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 415.73304691701196,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 417.7331292500021,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 419.73323941702256,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 421.73336150002433,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 423.7334465830354,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 425.7335577920312,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 427.73364162503276,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 429.7337234580191,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 431.73383070802083,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 433.7338878750452,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 435.7339815419982,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 11,
+    "sound": "sound1"
+  },
+  {
+    "time": 437.7340105830226,
+    "event": "imagery_loop2_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 437.73406066704774,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 439.7341082500061,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 441.73422495805426,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 443.73430491704494,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 445.7344052499975,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 447.7344747080351,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 449.7345328750089,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 451.73466875002487,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 453.7347276250366,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 455.73486345802667,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 457.7349413750344,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 459.7350227080169,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 11,
+    "sound": "sound1"
+  },
+  {
+    "time": 461.735041500011,
+    "event": "trial_end",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 461.7355967920157,
+    "event": "rest_start",
+    "duration": 1.0
+  },
+  {
+    "time": 461.74059987504734,
+    "event": "rest_flip",
+    "flip_time": 461.735600917018
+  },
+  {
+    "time": 462.74065429205075,
+    "event": "rest_end"
+  },
+  {
+    "time": 462.7406634580111,
+    "event": "next_trial",
+    "trial_number": 7,
+    "condition": "SECTOR"
+  },
+  {
+    "time": 462.7406673330115,
+    "event": "trial_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 462.74067366705276,
+    "event": "reference_phase_start",
+    "condition": "SECTOR",
+    "stim_count": 12
+  },
+  {
+    "time": 462.74581187503645,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 0,
+    "opacity": 0.925,
+    "sound": "sound2",
+    "flip_time": 462.7458085420076
+  },
+  {
+    "time": 464.75124708301155,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 1,
+    "opacity": 0.8500000000000001,
+    "sound": "sound1",
+    "flip_time": 464.7512440000428
+  },
+  {
+    "time": 466.75711900001625,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 2,
+    "opacity": 0.7750000000000001,
+    "sound": "sound1",
+    "flip_time": 466.7571155000478
+  },
+  {
+    "time": 468.7626559580094,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 3,
+    "opacity": 0.7000000000000002,
+    "sound": "sound1",
+    "flip_time": 468.762652458041
+  },
+  {
+    "time": 470.76826120802434,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 4,
+    "opacity": 0.6250000000000002,
+    "sound": "sound1",
+    "flip_time": 470.7682581249974
+  },
+  {
+    "time": 472.77433995803585,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 5,
+    "opacity": 0.5500000000000003,
+    "sound": "sound1",
+    "flip_time": 472.77433625003323
+  },
+  {
+    "time": 474.7803885000176,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 6,
+    "opacity": 0.47500000000000026,
+    "sound": "sound1",
+    "flip_time": 474.78038500004914
+  },
+  {
+    "time": 476.7864232500433,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 7,
+    "opacity": 0.40000000000000024,
+    "sound": "sound1",
+    "flip_time": 476.7864194170106
+  },
+  {
+    "time": 478.7919767500134,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 8,
+    "opacity": 0.32500000000000023,
+    "sound": "sound1",
+    "flip_time": 478.791972542007
+  },
+  {
+    "time": 480.7974554170505,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 9,
+    "opacity": 0.2500000000000002,
+    "sound": "sound1",
+    "flip_time": 480.7974528330378
+  },
+  {
+    "time": 482.8035039170063,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 10,
+    "opacity": 0.1750000000000002,
+    "sound": "sound1",
+    "flip_time": 482.80350020801416
+  },
+  {
+    "time": 484.809071833035,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 11,
+    "opacity": 0.10000000000000021,
+    "sound": "sound1",
+    "flip_time": 484.8090685000061
+  },
+  {
+    "time": 486.8091452920344,
+    "event": "imagery_phase_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 486.81481220800197,
+    "event": "imagery_phase_flip",
+    "condition": "SECTOR",
+    "flip_time": 486.8148091250332
+  },
+  {
+    "time": 486.81481554202037,
+    "event": "imagery_loop1_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 486.8148907920113,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 488.81499275000533,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 490.8150930420379,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 492.8152151250397,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 494.81529825000325,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 496.8153882500483,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 498.8154851250001,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 500.81553912500385,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 502.8156253330526,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 504.8157082920079,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 506.81580545799807,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 508.8159237500513,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 11,
+    "sound": "sound1"
+  },
+  {
+    "time": 510.81597200001124,
+    "event": "imagery_loop2_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 510.8160139170359,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 512.8161398330121,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 514.8162195830373,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 516.8162777080433,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 518.8163788750535,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 520.816503375012,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 522.8165965420194,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 524.816673250054,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 526.8167399170343,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 528.8168242500396,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 530.8168862920138,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 532.8169929580181,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 11,
+    "sound": "sound1"
+  },
+  {
+    "time": 534.8170187080395,
+    "event": "trial_end",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 534.8176571670338,
+    "event": "rest_start",
+    "duration": 1.0
+  },
+  {
+    "time": 534.8228806250263,
+    "event": "rest_flip",
+    "flip_time": 534.8176606670022
+  },
+  {
+    "time": 535.8229016670375,
+    "event": "rest_end"
+  },
+  {
+    "time": 535.8229102080222,
+    "event": "next_trial",
+    "trial_number": 8,
+    "condition": "SECTOR"
+  },
+  {
+    "time": 535.8229137920425,
+    "event": "trial_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 535.8229195420281,
+    "event": "reference_phase_start",
+    "condition": "SECTOR",
+    "stim_count": 12
+  },
+  {
+    "time": 535.8272592920111,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 0,
+    "opacity": 0.925,
+    "sound": "sound2",
+    "flip_time": 535.8272563330247
+  },
+  {
+    "time": 537.8323844170081,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 1,
+    "opacity": 0.8500000000000001,
+    "sound": "sound1",
+    "flip_time": 537.8323802080122
+  },
+  {
+    "time": 539.8382437080145,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 2,
+    "opacity": 0.7750000000000001,
+    "sound": "sound1",
+    "flip_time": 539.8382405000157
+  },
+  {
+    "time": 541.8442460420192,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 3,
+    "opacity": 0.7000000000000002,
+    "sound": "sound1",
+    "flip_time": 541.8442426670226
+  },
+  {
+    "time": 543.850086875027,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 4,
+    "opacity": 0.6250000000000002,
+    "sound": "sound1",
+    "flip_time": 543.8500834170263
+  },
+  {
+    "time": 545.8558550830348,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 5,
+    "opacity": 0.5500000000000003,
+    "sound": "sound1",
+    "flip_time": 545.855851750006
+  },
+  {
+    "time": 547.8612710420275,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 6,
+    "opacity": 0.47500000000000026,
+    "sound": "sound1",
+    "flip_time": 547.8612677080091
+  },
+  {
+    "time": 549.867105250014,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 7,
+    "opacity": 0.40000000000000024,
+    "sound": "sound1",
+    "flip_time": 549.8671019580215
+  },
+  {
+    "time": 551.87262108305,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 8,
+    "opacity": 0.32500000000000023,
+    "sound": "sound1",
+    "flip_time": 551.872617667017
+  },
+  {
+    "time": 553.8784282920533,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 9,
+    "opacity": 0.2500000000000002,
+    "sound": "sound1",
+    "flip_time": 553.878424708033
+  },
+  {
+    "time": 555.8841117920238,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 10,
+    "opacity": 0.1750000000000002,
+    "sound": "sound1",
+    "flip_time": 555.8841076250537
+  },
+  {
+    "time": 557.8896595000406,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 11,
+    "opacity": 0.10000000000000021,
+    "sound": "sound1",
+    "flip_time": 557.889656083018
+  },
+  {
+    "time": 559.8897158330074,
+    "event": "imagery_phase_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 559.8953257080284,
+    "event": "imagery_phase_flip",
+    "condition": "SECTOR",
+    "flip_time": 559.8953228330356
+  },
+  {
+    "time": 559.8953283330193,
+    "event": "imagery_loop1_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 559.8954016250209,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 561.8954661250464,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 563.8955635830062,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 565.8956675000372,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 567.8957538750255,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 569.8958489170182,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 571.8959368330543,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 573.8960125000449,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 575.896058250044,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 577.8961132080294,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 579.896211000043,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 581.8962787920027,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 11,
+    "sound": "sound1"
+  },
+  {
+    "time": 583.8963213330135,
+    "event": "imagery_loop2_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 583.8964058750425,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 585.8964615830337,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 587.8965316250105,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 589.8966514580534,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 591.8967313750181,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 593.8967961250455,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 595.8969108330202,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 597.8969855830073,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 599.8970793750486,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 601.8971452499973,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 603.897231333016,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 605.8973451250349,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 11,
+    "sound": "sound1"
+  },
+  {
+    "time": 607.8973967080237,
+    "event": "trial_end",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 607.8978856670437,
+    "event": "rest_start",
+    "duration": 1.0
+  },
+  {
+    "time": 607.9033416250022,
+    "event": "rest_flip",
+    "flip_time": 607.8978886670084
+  },
+  {
+    "time": 608.9033640000271,
+    "event": "rest_end"
+  },
+  {
+    "time": 608.9033747500507,
+    "event": "next_trial",
+    "trial_number": 9,
+    "condition": "SECTOR"
+  },
+  {
+    "time": 608.9033795830328,
+    "event": "trial_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 608.9033879170311,
+    "event": "reference_phase_start",
+    "condition": "SECTOR",
+    "stim_count": 12
+  },
+  {
+    "time": 608.9074845000287,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 0,
+    "opacity": 0.925,
+    "sound": "sound2",
+    "flip_time": 608.9074814170017
+  },
+  {
+    "time": 610.9134302080492,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 1,
+    "opacity": 0.8500000000000001,
+    "sound": "sound1",
+    "flip_time": 610.9134265420143
+  },
+  {
+    "time": 612.9189461670467,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 2,
+    "opacity": 0.7750000000000001,
+    "sound": "sound1",
+    "flip_time": 612.91894266702
+  },
+  {
+    "time": 614.9249797500088,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 3,
+    "opacity": 0.7000000000000002,
+    "sound": "sound1",
+    "flip_time": 614.9249760420062
+  },
+  {
+    "time": 616.9305035000434,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 4,
+    "opacity": 0.6250000000000002,
+    "sound": "sound1",
+    "flip_time": 616.9305001250468
+  },
+  {
+    "time": 618.9362692920258,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 5,
+    "opacity": 0.5500000000000003,
+    "sound": "sound1",
+    "flip_time": 618.9362648750539
+  },
+  {
+    "time": 620.942300625029,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 6,
+    "opacity": 0.47500000000000026,
+    "sound": "sound1",
+    "flip_time": 620.9422973330365
+  },
+  {
+    "time": 622.947803875024,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 7,
+    "opacity": 0.40000000000000024,
+    "sound": "sound1",
+    "flip_time": 622.9478004170232
+  },
+  {
+    "time": 624.9537053750246,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 8,
+    "opacity": 0.32500000000000023,
+    "sound": "sound1",
+    "flip_time": 624.9537018330302
+  },
+  {
+    "time": 626.9594394580345,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 9,
+    "opacity": 0.2500000000000002,
+    "sound": "sound1",
+    "flip_time": 626.9594362500357
+  },
+  {
+    "time": 628.9652321670437,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 10,
+    "opacity": 0.1750000000000002,
+    "sound": "sound1",
+    "flip_time": 628.9652285000193
+  },
+  {
+    "time": 630.9710259170388,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 11,
+    "opacity": 0.10000000000000021,
+    "sound": "sound1",
+    "flip_time": 630.9710225830204
+  },
+  {
+    "time": 632.9710527920397,
+    "event": "imagery_phase_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 632.9761401250144,
+    "event": "imagery_phase_flip",
+    "condition": "SECTOR",
+    "flip_time": 632.9761370830238
+  },
+  {
+    "time": 632.9761426670011,
+    "event": "imagery_loop1_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 632.9762130000163,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 634.9763451670296,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 636.9764365000301,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 638.9765146670397,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 640.9766397920321,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 642.9767021670123,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 644.9767751670443,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 646.976858500042,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 648.9769475000212,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 650.9770772500196,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 652.9771530830185,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 654.9772668750375,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 11,
+    "sound": "sound1"
+  },
+  {
+    "time": 656.9772969580372,
+    "event": "imagery_loop2_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 656.9773780830437,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 658.9774546670378,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 660.9775597500266,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 662.9776285420521,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 664.9776946670027,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 666.977771792037,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 668.977871375042,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 670.9780024170177,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 672.9780856250436,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 674.9781317920424,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 676.9782459170092,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 678.978348042001,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 11,
+    "sound": "sound1"
+  },
+  {
+    "time": 680.9783629580052,
+    "event": "trial_end",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 680.9787872500019,
+    "event": "rest_start",
+    "duration": 1.0
+  },
+  {
+    "time": 680.984154292033,
+    "event": "rest_flip",
+    "flip_time": 680.9787902079988
+  },
+  {
+    "time": 681.9842030419968,
+    "event": "rest_end"
+  },
+  {
+    "time": 681.9842127080192,
+    "event": "next_trial",
+    "trial_number": 10,
+    "condition": "SECTOR"
+  },
+  {
+    "time": 681.9842171250493,
+    "event": "trial_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 681.9842245830223,
+    "event": "reference_phase_start",
+    "condition": "SECTOR",
+    "stim_count": 12
+  },
+  {
+    "time": 681.9883202920319,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 0,
+    "opacity": 0.925,
+    "sound": "sound2",
+    "flip_time": 681.9883174580173
+  },
+  {
+    "time": 683.9930622079992,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 1,
+    "opacity": 0.8500000000000001,
+    "sound": "sound1",
+    "flip_time": 683.9930592500023
+  },
+  {
+    "time": 685.99946666701,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 2,
+    "opacity": 0.7750000000000001,
+    "sound": "sound1",
+    "flip_time": 685.9994629170396
+  },
+  {
+    "time": 688.0058886250481,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 3,
+    "opacity": 0.7000000000000002,
+    "sound": "sound1",
+    "flip_time": 688.0058849170455
+  },
+  {
+    "time": 690.0114202920231,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 4,
+    "opacity": 0.6250000000000002,
+    "sound": "sound1",
+    "flip_time": 690.0114167919965
+  },
+  {
+    "time": 692.0176292500109,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 5,
+    "opacity": 0.5500000000000003,
+    "sound": "sound1",
+    "flip_time": 692.0176249170327
+  },
+  {
+    "time": 694.0232844170532,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 6,
+    "opacity": 0.47500000000000026,
+    "sound": "sound1",
+    "flip_time": 694.0232811670285
+  },
+  {
+    "time": 696.0288660000078,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 7,
+    "opacity": 0.40000000000000024,
+    "sound": "sound1",
+    "flip_time": 696.0288610830321
+  },
+  {
+    "time": 698.0346435000538,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 8,
+    "opacity": 0.32500000000000023,
+    "sound": "sound1",
+    "flip_time": 698.0346397500252
+  },
+  {
+    "time": 700.0401681670337,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 9,
+    "opacity": 0.2500000000000002,
+    "sound": "sound1",
+    "flip_time": 700.040164917009
+  },
+  {
+    "time": 702.0463569580461,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 10,
+    "opacity": 0.1750000000000002,
+    "sound": "sound1",
+    "flip_time": 702.0463531670393
+  },
+  {
+    "time": 704.0519723330508,
+    "event": "reference_flip",
+    "condition": "SECTOR",
+    "idx": 11,
+    "opacity": 0.10000000000000021,
+    "sound": "sound1",
+    "flip_time": 704.0519692079979
+  },
+  {
+    "time": 706.0520123750321,
+    "event": "imagery_phase_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 706.0571605000296,
+    "event": "imagery_phase_flip",
+    "condition": "SECTOR",
+    "flip_time": 706.0571577080409
+  },
+  {
+    "time": 706.0571630420163,
+    "event": "imagery_loop1_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 706.057234958047,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 708.0573484170018,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 710.0574160830001,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 712.0575509580085,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 714.0576662920066,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 716.0577962080133,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 718.0579393750522,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 720.0580305000185,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 722.0581529170158,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 724.0582080000313,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 726.0582650420256,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 728.0583693750086,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 1,
+    "idx": 11,
+    "sound": "sound1"
+  },
+  {
+    "time": 730.0583967920393,
+    "event": "imagery_loop2_start",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 730.0584452080075,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 0,
+    "sound": "sound2"
+  },
+  {
+    "time": 732.0585133749992,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 1,
+    "sound": "sound1"
+  },
+  {
+    "time": 734.0586263750447,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 2,
+    "sound": "sound1"
+  },
+  {
+    "time": 736.0587277919985,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 3,
+    "sound": "sound1"
+  },
+  {
+    "time": 738.0588235000032,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 4,
+    "sound": "sound1"
+  },
+  {
+    "time": 740.0588956249994,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 5,
+    "sound": "sound1"
+  },
+  {
+    "time": 742.0589836669969,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 6,
+    "sound": "sound1"
+  },
+  {
+    "time": 744.0590868750005,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 7,
+    "sound": "sound1"
+  },
+  {
+    "time": 746.0591890420183,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 8,
+    "sound": "sound1"
+  },
+  {
+    "time": 748.0593036670471,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 9,
+    "sound": "sound1"
+  },
+  {
+    "time": 750.0593742920319,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 10,
+    "sound": "sound1"
+  },
+  {
+    "time": 752.0594565830543,
+    "event": "imagery_sound",
+    "condition": "SECTOR",
+    "loop": 2,
+    "idx": 11,
+    "sound": "sound1"
+  },
+  {
+    "time": 754.0595115000033,
+    "event": "trial_end",
+    "condition": "SECTOR"
+  },
+  {
+    "time": 754.059994875046,
+    "event": "rest_start",
+    "duration": 1.0
+  },
+  {
+    "time": 754.0655748330173,
+    "event": "rest_flip",
+    "flip_time": 754.0599978330429
+  },
+  {
+    "time": 755.0656144170207,
+    "event": "rest_end"
+  },
+  {
+    "time": 755.0656184999971,
+    "event": "experiment_end"
+  }
+]

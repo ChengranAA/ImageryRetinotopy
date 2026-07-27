@@ -1,11 +1,17 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import ClassVar
-from psychopy import visual, sound
+from typing import TYPE_CHECKING, ClassVar
+
+if TYPE_CHECKING:
+    # Keep these imports available to type checkers, but do not load PsychoPy's
+    # OpenGL visual stack while the experiment modules are merely importing.
+    from psychopy import visual
 
 @dataclass
 class Object:
     window_size: tuple[int, int] = (1080, 720)
-    window_fullscr: bool = True
+    window_fullscr: bool = False
     window_units: str = "pix"
 
     bullseye_inner_radius: float = 5
@@ -17,9 +23,9 @@ class Object:
     sector_image_extension: str = ".png"
     sector_grid_path: str = "../stimuli/sector_grid_a_pilot.png"
 
-    ring_image_dir: str = "../stimuli/sectors_d"
+    ring_image_dir: str = "../stimuli/rings_d"
     ring_image_extension: str = ".png"
-    ring_grid_path: str = "../stimuli/sector_grid_d.png"
+    ring_grid_path: str = "../stimuli/ring_grid_d.png"
 
 
     win: visual.Window = field(init=False)
@@ -30,21 +36,32 @@ class Object:
     SECTORS_COUNTERCLOCKWISE: ClassVar[list[str]] = [
         f"sector_a_{i:02d}" for i in range(12)
     ]
+    # Each image starts at ``index * 30°`` and spans 60°, so its centre is
+    # ``index * 30° + 30°``.  Start at index 2: sector_a_02 is centred at 90°.
+    # Decrementing the index gives a clockwise sweep in the stimulus coordinate
+    # system (0° = right, 90° = up).
+    SECTOR_START_INDEX: ClassVar[int] = 2
+    SECTOR_STEP_DEGREES: ClassVar[float] = 30.0
+    SECTOR_WIDTH_DEGREES: ClassVar[float] = 60.0
     SECTORS_CLOCKWISE: ClassVar[list[str]] = [
-        SECTORS_COUNTERCLOCKWISE[0],
-        *SECTORS_COUNTERCLOCKWISE[:0:-1],
+        # Class-body comprehensions have their own scope, hence the literals
+        # here rather than references to the constants immediately above.
+        f"sector_a_{(2 - offset) % 12:02d}"
+        for offset in range(12)
+    ]
+    SECTOR_CENTER_DEGREES: ClassVar[list[float]] = [
+        ((2 - offset) * 30.0 + 60.0 / 2) % 360
+        for offset in range(12)
     ]
 
-    _RINGS: ClassVar[list[str]] = [
-        f"sector_d_{i:02d}" for i in range(5)
-    ]
-    _REVERSE_RINGS: ClassVar[list[str]] = _RINGS.copy()
-    _REVERSE_RINGS.pop()
-    _REVERSE_RINGS.reverse()
-
-    RINGS: ClassVar[list[str]] = _RINGS + _REVERSE_RINGS
+    RINGS: ClassVar[list[str]] = ['ring_d_00', 'ring_d_01', 'ring_d_02', 'ring_d_03', 'ring_d_04', 'ring_d_05', 'ring_d_04', 'ring_d_03', 'ring_d_02', 'ring_d_01', 'ring_d_00']
 
     def __post_init__(self) -> None:
+        # Creating an Object is the point at which a display and audio device are
+        # actually needed. Deferring this import noticeably shortens startup to
+        # the participant dialog and avoids opening the visual stack prematurely.
+        from psychopy import sound, visual
+
         self.win = visual.Window(
             size=self.window_size,
             fullscr=self.window_fullscr,
@@ -77,6 +94,9 @@ class Object:
             )
             for sector_name in self.SECTORS_CLOCKWISE
         ]
+        # Kept alongside ``sector_stims`` so trial code can log and cue the
+        # exact polar-angle position without relying on list indices.
+        self.sector_center_degrees = self.SECTOR_CENTER_DEGREES.copy()
 
         self.sector_grid = visual.ImageStim(
             self.win,
@@ -98,12 +118,3 @@ class Object:
             self.win,
             image=self.ring_grid_path
         )
-
-if __name__ == "__main__":
-    from psychopy import core
-
-    obj = Object()
-    obj.bullseye_inner.draw()
-    obj.bullseye_outer.draw()
-    obj.win.flip()
-    core.wait(2)
