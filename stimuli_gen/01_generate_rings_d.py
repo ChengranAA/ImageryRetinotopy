@@ -19,106 +19,100 @@ OUTER_RADIUS = 1.0
 INNER_RADIUS = OUTER_RADIUS / (NUM_RINGS * 2.0)
 
 
-def generate_annular_rings_d(num_rings=NUM_RINGS, outer_radius=OUTER_RADIUS, inner_radius=INNER_RADIUS, ring_parts=1):
+def generate_annular_rings_d(
+    number_of_rings=NUM_RINGS,
+    outer_radius=OUTER_RADIUS,
+    inner_radius=INNER_RADIUS,
+    segments_per_mask=1,
+):
     """
-    Generate rings for Grid D where each ring is the union of `ring_parts`
-    adjacent ring parts, represented as a single annulus between:
-    inner_r = boundary before the first included ring part
-    outer_r = outer boundary of the last included ring part
+    Generate Grid D masks as annuli spanning adjacent radial segments.
     """
     out_dir = os.path.join(OUTPUT_ROOT, OUTPUT_SUBDIR)
     os.makedirs(out_dir, exist_ok=True)
 
     # Radii used by 00_generate_grid_d.py to draw ring outlines.
     # We'll use these as the "outer boundary" for ring parts:
-    # ring-part p: inner=previous_r (0 then radii[p-1]) and outer=radii[p]
-    num_ring_parts = num_rings
-    ring_parts_group = int(ring_parts)
-    if ring_parts_group < 1:
-        raise ValueError(f"ring_parts must be >= 1, got {ring_parts}")
-    if ring_parts_group > num_ring_parts:
+    # Segment p has the radial range 0/radii[p - 1] through radii[p].
+    number_of_segments = number_of_rings
+    mask_segment_count = int(segments_per_mask)
+    if mask_segment_count < 1:
+        raise ValueError(f"segments_per_mask must be >= 1, got {segments_per_mask}")
+    if mask_segment_count > number_of_segments:
         raise ValueError(
-            f"ring_parts ({ring_parts_group}) cannot exceed number of ring parts ({num_ring_parts})"
+            "segments_per_mask "
+            f"({mask_segment_count}) cannot exceed number of segments ({number_of_segments})"
         )
-    num_annular_rings = num_ring_parts - ring_parts_group + 1  # no wrap-around
+    number_of_masks = number_of_segments - mask_segment_count + 1
 
-    radii = np.linspace(inner_radius, outer_radius, num_ring_parts)
+    segment_outer_radii = np.linspace(inner_radius, outer_radius, number_of_segments)
 
-    ring_alpha_dict = {}
+    ring_masks = {}
 
-    def save_ring_ring(inner_r, outer_r, idx):
-        """Save one full 360-degree annulus between inner_r and outer_r."""
-        width = outer_r - inner_r
-        if width <= 0:
+    def save_annular_mask(inner_radius, outer_radius, mask_index):
+        """Save one full annular mask between the specified radial boundaries."""
+        annulus_width = outer_radius - inner_radius
+        if annulus_width <= 0:
             return
 
-        wedge = Wedge(
+        annulus_patch = Wedge(
             (0, 0),
-            outer_r,
+            outer_radius,
             0.0,
             360.0,
-            width=width,          # creates the annulus gap from inner_r to outer_r
+            width=annulus_width,
             facecolor="black",
             edgecolor="none",
         )
 
         # Render to a transparent PNG and extract alpha
-        fig = plt.figure(figsize=FIGSIZE, facecolor="none")
-        ax = fig.add_subplot(111)  # avoid reliance on global "current axes"
-        ax.add_patch(wedge)
+        figure = plt.figure(figsize=FIGSIZE, facecolor="none")
+        axes = figure.add_subplot(111)
+        axes.add_patch(annulus_patch)
 
-        ax.set_aspect("equal")
-        ax.set_xlim(-1.1, 1.1)
-        ax.set_ylim(-1.1, 1.1)
-        ax.axis("off")
-        plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+        axes.set_aspect("equal")
+        axes.set_xlim(-1.1, 1.1)
+        axes.set_ylim(-1.1, 1.1)
+        axes.axis("off")
+        figure.subplots_adjust(left=0, right=1, top=1, bottom=0)
 
-        buf = io.BytesIO()
+        png_buffer = io.BytesIO()
         try:
-            fig.canvas.draw()  # ensure rendering is complete before saving
-            fig.savefig(buf, format="png", dpi=DPI, pad_inches=0, transparent=True)
+            figure.canvas.draw()
+            figure.savefig(png_buffer, format="png", dpi=DPI, pad_inches=0, transparent=True)
         finally:
-            plt.close(fig)
+            plt.close(figure)
 
-        filename = f"ring_d_{idx:02d}.png"
-        out_path = os.path.join(out_dir, filename)
+        filename = f"ring_d_{mask_index:02d}.png"
+        output_path = os.path.join(out_dir, filename)
 
         # Write PNG to disk
-        with open(out_path, "wb") as f:
-            f.write(buf.getvalue())
+        with open(output_path, "wb") as output_file:
+            output_file.write(png_buffer.getvalue())
 
         # Extract alpha channel for pickle
-        buf.seek(0)
-        im = Image.open(buf).convert("RGBA")
-        arr = np.array(im)
-        alpha = arr[:, :, 3] / 255.0  # normalize 0..1
-        ring_alpha_dict[f"ring_d_{idx:02d}"] = alpha
+        png_buffer.seek(0)
+        rgba_image = Image.open(png_buffer).convert("RGBA")
+        alpha_mask = np.asarray(rgba_image)[:, :, 3] / 255.0
+        ring_masks[f"ring_d_{mask_index:02d}"] = alpha_mask
 
-        print(f"Saved {out_path}")
+        print(f"Saved {output_path}")
 
-    # ring i spans ring parts [i, i+1, ..., i+ring_parts_group-1]
-    # Ring part p boundaries:
-    #   outer boundary = radii[p]
-    #   inner boundary = 0.0 if p==0 else radii[p-1]
-    #
-    # Therefore ring i:
-    #   inner_r = 0.0 if i==0 else radii[i-1]
-    #   outer_r = radii[i+ring_parts_group-1]
-    for i in range(num_annular_rings):
-        inner_r = 0.0 if i == 0 else radii[i - 1]
-        outer_r = radii[i + ring_parts_group - 1]
-        save_ring_ring(inner_r, outer_r, i)
+    for mask_index in range(number_of_masks):
+        mask_inner_radius = 0.0 if mask_index == 0 else segment_outer_radii[mask_index - 1]
+        mask_outer_radius = segment_outer_radii[mask_index + mask_segment_count - 1]
+        save_annular_mask(mask_inner_radius, mask_outer_radius, mask_index)
 
     # Save alpha masks dictionary
     pkl_path = os.path.join(out_dir, "all_rings_d.pkl")
-    with open(pkl_path, "wb") as f:
-        pickle.dump(ring_alpha_dict, f)
+    with open(pkl_path, "wb") as output_file:
+        pickle.dump(ring_masks, output_file)
 
-    print(f"\nAll {num_annular_rings} annular rings saved to: {out_dir}")
+    print(f"\nAll {number_of_masks} annular rings saved to: {out_dir}")
     print(f"Alpha masks saved in: {pkl_path}")
-    print(f"Dictionary keys: {list(ring_alpha_dict.keys())}")
+    print(f"Dictionary keys: {list(ring_masks.keys())}")
 
-    return ring_alpha_dict
+    return ring_masks
 
 
 if __name__ == "__main__":

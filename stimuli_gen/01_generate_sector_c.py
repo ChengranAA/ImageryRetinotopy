@@ -1,3 +1,5 @@
+"""Generate alpha masks for sliding horizontal bands in Grid C."""
+
 import os
 import io
 import pickle
@@ -9,89 +11,87 @@ from PIL import Image
 
 def main():
     # Grid C configuration (match 00_generate_grid_c.py)
-    num_bands = 8
+    number_of_grid_bands = 8
     outer_radius = 1.0
 
-    sector_parts = 1  # span two adjacent bands
-    num_sectors = num_bands - sector_parts + 1  # no wrap-around => 7
+    bands_per_mask = 2
+    number_of_masks = number_of_grid_bands - bands_per_mask + 1
 
     # Image parameters (match other generators)
-    figsize = (5, 5)  # inches -> dpi=100 => 500x500 px
-    dpi = 100
-    output_folder = "stimuli/sectors_c"
-    os.makedirs(output_folder, exist_ok=True)
+    figure_size_inches = (5, 5)
+    image_dpi = 100
+    output_directory = "stimuli/sectors_c"
+    os.makedirs(output_directory, exist_ok=True)
 
     # Band boundaries in data coordinates (-outer_radius .. +outer_radius)
-    y_boundaries = np.linspace(-outer_radius, outer_radius, num_bands + 1)
+    horizontal_boundaries = np.linspace(-outer_radius, outer_radius, number_of_grid_bands + 1)
 
-    sector_arrays = {}
+    sector_masks = {}
 
-    for step in range(num_sectors):
-        y0 = y_boundaries[step]
-        y1 = y_boundaries[step + sector_parts]
-        height = y1 - y0
-        if height <= 0:
+    for mask_index in range(number_of_masks):
+        lower_boundary = horizontal_boundaries[mask_index]
+        upper_boundary = horizontal_boundaries[mask_index + bands_per_mask]
+        band_height = upper_boundary - lower_boundary
+        if band_height <= 0:
             continue
 
         # Clip path circle (transparent)
-        clip_circle = Circle((0, 0), outer_radius, fill=False, edgecolor="none")
+        circular_clip_path = Circle((0, 0), outer_radius, fill=False, edgecolor="none")
 
-        # Rectangle covering the sector's vertical span, spanning full x-range
-        rect = Rectangle(
-            (-outer_radius, y0),
+        # Rectangle covering the mask's vertical span, spanning the full x-range.
+        band_patch = Rectangle(
+            (-outer_radius, lower_boundary),
             2 * outer_radius,
-            height,
+            band_height,
             facecolor="black",
             edgecolor="none",
         )
 
         # Create figure with transparent background
-        fig = plt.figure(figsize=figsize, facecolor="none")
-        ax = plt.gca()
+        figure, axes = plt.subplots(figsize=figure_size_inches, facecolor="none")
 
         # Add clip path and apply it to the rectangle
-        ax.add_patch(clip_circle)
-        ax.add_patch(rect)
-        rect.set_clip_path(clip_circle)
+        axes.add_patch(circular_clip_path)
+        axes.add_patch(band_patch)
+        band_patch.set_clip_path(circular_clip_path)
 
         # Match axis settings so it aligns with the other generators
-        ax.set_aspect("equal")
-        ax.set_xlim(-1.1, 1.1)
-        ax.set_ylim(-1.1, 1.1)
-        ax.axis("off")
-        plt.subplots_adjust(left=0, right=1, top=1, bottom=0)
+        axes.set_aspect("equal")
+        axes.set_xlim(-1.1, 1.1)
+        axes.set_ylim(-1.1, 1.1)
+        axes.axis("off")
+        figure.subplots_adjust(left=0, right=1, top=1, bottom=0)
 
-        filename = f"sector_c_{step:02d}.png"
-        output_path = os.path.join(output_folder, filename)
+        filename = f"sector_c_{mask_index:02d}.png"
+        output_path = os.path.join(output_directory, filename)
 
-        # Save to buffer first (then also extract alpha)
-        buf = io.BytesIO()
-        fig.savefig(buf, format="png", dpi=dpi, pad_inches=0, transparent=True)
-        plt.close(fig)
+        # Save to a buffer first, then extract its alpha channel.
+        png_buffer = io.BytesIO()
+        figure.savefig(png_buffer, format="png", dpi=image_dpi, pad_inches=0, transparent=True)
+        plt.close(figure)
 
         # Write PNG file to disk
-        with open(output_path, "wb") as f:
-            f.write(buf.getvalue())
+        with open(output_path, "wb") as output_file:
+            output_file.write(png_buffer.getvalue())
 
         # Extract alpha channel
-        buf.seek(0)
-        img = Image.open(buf).convert("RGBA")
-        img_array = np.array(img)
-        alpha_channel = img_array[:, :, 3] / 255.0  # normalize 0..1
+        png_buffer.seek(0)
+        rgba_image = Image.open(png_buffer).convert("RGBA")
+        alpha_mask = np.asarray(rgba_image)[:, :, 3] / 255.0
 
-        sector_arrays[f"sector_c_{step:02d}"] = alpha_channel
+        sector_masks[f"sector_c_{mask_index:02d}"] = alpha_mask
         print(f"Saved {filename}")
 
-    # Save all sector alpha masks in one pickle
-    combined_pickle_path = os.path.join(output_folder, "all_sectors_c.pkl")
-    with open(combined_pickle_path, "wb") as f:
-        pickle.dump(sector_arrays, f)
+    # Save all sector alpha masks in one pickle archive.
+    mask_archive_path = os.path.join(output_directory, "all_sectors_c.pkl")
+    with open(mask_archive_path, "wb") as output_file:
+        pickle.dump(sector_masks, output_file)
 
-    print(f"\nAll {num_sectors} sector images saved to: {output_folder}")
-    print(f"All sector arrays saved in: {combined_pickle_path}")
-    print(f"Dictionary keys: {list(sector_arrays.keys())}")
-    if sector_arrays:
-        print(f"Array shape: {list(sector_arrays.values())[0].shape} (values 0-1)")
+    print(f"\nAll {number_of_masks} sector images saved to: {output_directory}")
+    print(f"All sector masks saved in: {mask_archive_path}")
+    print(f"Dictionary keys: {list(sector_masks.keys())}")
+    if sector_masks:
+        print(f"Mask shape: {next(iter(sector_masks.values())).shape} (values 0-1)")
 
 
 if __name__ == "__main__":
