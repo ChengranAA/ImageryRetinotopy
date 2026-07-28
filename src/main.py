@@ -3,6 +3,7 @@
 import json
 import math
 import random
+import socket
 import sys
 import time
 from pathlib import Path
@@ -11,6 +12,7 @@ from psychopy import core, event, gui, prefs, sound, visual
 
 
 RUN_DURATION_SECONDS = 5 * 60
+SCANNER_DUMMY_TRS = 5
 MAX_REAL_RUNS = 10
 DEFAULT_TR_SECONDS = 2.0
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -28,46 +30,38 @@ class Experiment:
         self.tr_seconds = DEFAULT_TR_SECONDS
         self.tr_count = 0
         self.target_trs = None
+        self.mock_scanner_started = False
+        self.mock_scanner_last_attempt = float("-inf")
 
     def log(self, name, **data):
         self.events.append({"time": self.clock.getTime(), "event": name, **data})
 
+    def log_on_flip(self, name, **data):
+        self.window.callOnFlip(lambda: self.log(name, **data))
+
     def show_dialogs(self):
-        participant_dialog = gui.Dlg(title="Imagery Retinotopy", alwaysOnTop=True)
-        participant_dialog.addField("Subject ID:")
-        participant_dialog.addField("Experiment Type", choices=["fMRI", "Practice"])
-        participant = participant_dialog.show()
-        if not participant_dialog.OK:
+        dialog = gui.Dlg(title="Imagery Retinotopy", alwaysOnTop=True)
+        dialog.addField("Subject ID:")
+        dialog.addField("Run type", choices=["Practice", "fMRI"])
+        dialog.addField("TR (seconds; fMRI only)", initial=DEFAULT_TR_SECONDS)
+        dialog.addField(
+            "Run number (fMRI only)",
+            choices=[f"Run {number}" for number in range(1, MAX_REAL_RUNS + 1)],
+        )
+        data = dialog.show()
+        if not dialog.OK:
             return False
 
-        self.subject_id = participant[0] or "unknown"
-        self.experiment_type = participant[1]
+        self.subject_id = data[0] or "unknown"
+        self.experiment_type = data[1]
         if self.experiment_type == "fMRI":
-            run_dialog = gui.Dlg(title="fMRI run setup", alwaysOnTop=True)
-            run_dialog.addField("TR (seconds):")
-            run_dialog.addField(
-                "Run number",
-                choices=[f"Run {number}" for number in range(1, MAX_REAL_RUNS + 1)],
-            )
-            run_data = run_dialog.show()
-            if not run_dialog.OK:
-                return False
             try:
-                self.tr_seconds = float(run_data[0])
+                self.tr_seconds = float(data[2])
                 if self.tr_seconds <= 0:
                     raise ValueError
             except (TypeError, ValueError):
                 self.tr_seconds = DEFAULT_TR_SECONDS
-            self.run_number = int(run_data[1].removeprefix("Run "))
-
-        confirmation = gui.Dlg(title="Confirm run", alwaysOnTop=True)
-        if self.experiment_type == "fMRI":
-            confirmation.addText(f"Real run: {self.run_number} of {MAX_REAL_RUNS}")
-        else:
-            confirmation.addText("Practice run — system-clock timing")
-        confirmation.show()
-        if not confirmation.OK:
-            return False
+            self.run_number = int(data[3].removeprefix("Run "))
 
         self.log(
             "dialog_complete",
@@ -99,6 +93,7 @@ class Experiment:
         self.sector_grid = visual.ImageStim(
             self.window, image=str(STIMULI_DIRECTORY / "sector_grid_a_pilot.png")
         )
+        self.sector_ids = sector_names
 
         # Ring trials use these masks for outward and inward sweeps.
         ring_names = [f"ring_d_{index:02d}" for index in range(6)]
@@ -109,10 +104,11 @@ class Experiment:
         self.ring_grid = visual.ImageStim(
             self.window, image=str(STIMULI_DIRECTORY / "ring_grid_d.png")
         )
+        self.ring_ids = ring_names
 
     @staticmethod
     def is_scanner_trigger(key):
-        return str(key).lower() in {"5", "t", "num5"}
+        return str(key) == "5"
 
     def poll_triggers(self):
         for key in event.getKeys():
@@ -121,9 +117,28 @@ class Experiment:
             self.tr_count += 1
             self.log("tr", tr_index=self.tr_count, trigger_key=str(key), tr_seconds=self.tr_seconds)
 
+    def start_mock_scanner(self):
+        if self.mock_scanner_started:
+            return True
+        self.mock_scanner_last_attempt = self.clock.getTime()
+        try:
+            with socket.create_connection(("127.0.0.1", 2333), timeout=0.2) as connection:
+                connection.sendall(b"Start")
+        except OSError:
+            return False
+        self.mock_scanner_started = True
+        self.log("mock_scanner_start_sent", host="127.0.0.1", port=2333)
+        return True
+
     def wait_for_tr(self, target=None):
         target = target or self.tr_count + 1
         while self.tr_count < target:
+            if (
+                self.tr_count < SCANNER_DUMMY_TRS
+                and not self.mock_scanner_started
+                and self.clock.getTime() - self.mock_scanner_last_attempt >= 1
+            ):
+                self.start_mock_scanner()
             self.poll_triggers()
             if self.tr_count >= self.target_trs:
                 return False
@@ -156,21 +171,33 @@ class Experiment:
 
     def run_trial(self, condition):
         if condition == "SECTOR":
-            grid, stimuli, angles = self.sector_grid, self.sector_stimuli, self.sector_angles
+            grid, stimuli, angles, stimulus_ids = (
+                self.sector_grid,
+                self.sector_stimuli,
+                self.sector_angles,
+                self.sector_ids,
+            )
         else:
-            grid, stimuli, angles = self.ring_grid, [
+            grid, stimuli, angles, stimulus_ids = (
+                self.ring_grid,
+                [None, *self.ring_stimuli, None, *reversed(self.ring_stimuli), None],
                 None,
-                *self.ring_stimuli,
-                None,
-                *reversed(self.ring_stimuli),
-                None,
-            ], None
+                ["blank_grid", *self.ring_ids, "blank_grid", *reversed(self.ring_ids), "blank_grid"],
+            )
 
         self.log("trial_start", condition=condition)
         opacity = 1.0
         opacity_step = 0.9 / len(stimuli)
+        previous_state = None
         for index, stimulus in enumerate(stimuli):
             angle = angles[index] if angles else None
+            state = {
+                "condition": condition,
+                "index": index,
+                "stimulus_id": stimulus_ids[index],
+                "angle": angle,
+                "blank_grid": stimulus is None,
+            }
             grid.draw()
             opacity -= opacity_step
             if stimulus is not None:
@@ -178,29 +205,41 @@ class Experiment:
                 stimulus.draw()
             self.draw_bullseye()
             tone = self.tone_for(index, angle, blank_grid=stimulus is None)
+            if previous_state:
+                self.log_on_flip("stimulus_offset", **previous_state)
             self.window.callOnFlip(tone.play)
+            self.log_on_flip("stimulus_onset", **state)
+            self.log_on_flip("reference_flip", **state)
             self.window.flip()
-            self.log(
-                "reference_flip",
-                condition=condition,
-                index=index,
-                angle=angle,
-                blank_grid=stimulus is None,
-            )
+            previous_state = state
             if not self.wait(2):
+                self.log("stimulus_offset", **previous_state, reason="run_end")
                 return False
 
         grid.draw()
         self.draw_bullseye()
+        self.log_on_flip("stimulus_offset", **previous_state)
+        self.log_on_flip("imagery_onset", condition=condition)
         self.window.flip()
         self.log("imagery_start", condition=condition)
         for loop in (1, 2):
             for index in range(len(stimuli)):
                 angle = angles[index] if angles else None
                 self.tone_for(index, angle, blank_grid=stimuli[index] is None).play()
-                self.log("imagery_tone", condition=condition, loop=loop, index=index, angle=angle)
+                self.log(
+                    "imagery_tone",
+                    condition=condition,
+                    loop=loop,
+                    index=index,
+                    stimulus_id=stimulus_ids[index],
+                    angle=angle,
+                )
                 if not self.wait(2):
+                    self.log("imagery_offset", condition=condition, reason="run_end")
                     return False
+        self.draw_bullseye()
+        self.log_on_flip("imagery_offset", condition=condition)
+        self.window.flip()
         self.log("trial_end", condition=condition)
         return True
 
@@ -215,9 +254,17 @@ class Experiment:
     def run(self):
         is_fmri = self.experiment_type == "fMRI"
         if is_fmri:
-            self.target_trs = math.ceil(RUN_DURATION_SECONDS / self.tr_seconds)
-            self.log("scanner_trigger_wait_start", target_trs=self.target_trs, tr_seconds=self.tr_seconds)
-            self.wait_for_tr()
+            task_trs = math.ceil(RUN_DURATION_SECONDS / self.tr_seconds)
+            self.target_trs = SCANNER_DUMMY_TRS + task_trs
+            self.log(
+                "scanner_dummy_trigger_wait_start",
+                dummy_trs=SCANNER_DUMMY_TRS,
+                task_trs=task_trs,
+                target_trs=self.target_trs,
+                tr_seconds=self.tr_seconds,
+            )
+            self.start_mock_scanner()
+            self.wait_for_tr(SCANNER_DUMMY_TRS)
             self.log("scanner_run_start", tr_index=self.tr_count)
 
         trials = ["SECTOR"] * 5 + ["RING"] * 5
@@ -252,7 +299,8 @@ def main():
 
 def self_check():
     assert Experiment.is_scanner_trigger("5")
-    assert Experiment.is_scanner_trigger("T")
+    assert not Experiment.is_scanner_trigger("T")
+    assert not Experiment.is_scanner_trigger("num5")
     assert not Experiment.is_scanner_trigger("space")
 
 
