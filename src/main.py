@@ -472,12 +472,62 @@ def run_trial(condition):
     else:
         raise ValueError(f"Unknown condition: {condition}")
 
-    log("trial_start", condition=condition, trial_number=trial_number)
+    # start jlb change
+
+    # log("trial_start", condition=condition, trial_number=trial_number)
+    # active_grid = grid
+    # active_stimulus = None
+    # window.callOnFlip(lambda: log("imagery_onset", condition=condition))
+    # draw_scene()
+    # log("imagery_start", condition=condition)
+        log("trial_start", condition=condition, trial_number=trial_number)
+
+    # Two low beeps to establish the rhythm before imagery begins.
+    # The first high beep is the actual imagery onset.
+    
+    # # FIRST UPDATE
+    # active_grid = None
+    # active_stimulus = None
+    # draw_bullseye()
+    # window.flip()
+
+    # low_tone.play()
+    # wait(2)
+
+    # low_tone.play()
+    # wait(2)
+
+    # # Imagery starts on the first high beep.
+    # active_grid = grid
+    # active_stimulus = None
+    # high_tone.play()
+    # window.callOnFlip(lambda: log("imagery_onset", condition=condition))
+    # draw_scene()
+    # log("imagery_start", condition=condition)
+
+    # SECOND UPDATE
+        log("trial_start", condition=condition, trial_number=trial_number)
+
+    # Show the grid on the first low beep so the participant
+    # knows which stimulus they are about to imagine.
     active_grid = grid
     active_stimulus = None
+    low_tone.play()
+    draw_scene()
+    log("grid_preview_start", condition=condition)
+
+    # Second low beep, maintaining the same 2-second rhythm
+    wait(2)
+    low_tone.play()
+
+    # Imagery starts on the first high beep
+    wait(2)
+    high_tone.play()
     window.callOnFlip(lambda: log("imagery_onset", condition=condition))
     draw_scene()
     log("imagery_start", condition=condition)
+
+    # end jlb change
 
     for loop in (1, 2, 3):
         for index, stimulus in enumerate(stimuli):
