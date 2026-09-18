@@ -6,7 +6,7 @@ Author: Chengran Li
 
 Experiment schedule:
 - Wait for scanner dummy volumes (fMRI runs only)
-- Show 3 rotating-sector trials and 3 bar-sweep trials in random order
+- Show one rotating-sector, one vertical-bar, and one horizontal-bar trial in random order
 - Show each aperture sequence once
 - Repeat the same sequence twice using tones for imagery
 """
@@ -33,7 +33,7 @@ from psychopy import sound, visual
 
 ## Experiment settings
 SCANNER_DUMMY_TRS = 5
-DEFAULT_TR_SECONDS = 2.0
+DEFAULT_TR_SECONDS = 1.0
 MONITOR_NAME = "7T_Projector_NOVA"
 PROJECTOR_SIZE_PIX = (1920, 1200)
 PROJECTOR_WIDTH_CM = 30.0
@@ -109,7 +109,14 @@ def draw_scene():
 def aperture_path(condition, stimulus_id, blank_grid):
     if blank_grid:
         return ""
-    directory = "sectors_pilot" if condition == "SECTOR" else "vertical_bars"
+    if condition == "SECTOR":
+        directory = "sectors_pilot"
+    elif condition == "VERTICAL_BAR":
+        directory = "vertical_bars"
+    elif condition == "HORIZONTAL_BAR":
+        directory = "horizontal_bars"
+    else:
+        raise ValueError(f"Unknown condition: {condition}")
     return str(Path("stimuli") / directory / f"{stimulus_id}.png")
 
 
@@ -265,6 +272,7 @@ def create_stimuli():
     global window, bullseye_outer, bullseye_inner, low_tone, high_tone
     global sector_angles, sector_stimuli, sector_grid, sector_ids
     global bar_stimuli, bar_grid, bar_ids
+    global horizontal_bar_stimuli, horizontal_bar_grid, horizontal_bar_ids
 
     mon7t = monitors.Monitor(MONITOR_NAME)
     mon7t.setSizePix(PROJECTOR_SIZE_PIX)
@@ -307,6 +315,15 @@ def create_stimuli():
         for name in bar_ids
     ]
     bar_grid = visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "vertical_bar_grid.png"))
+
+    horizontal_bar_ids = [f"horizontal_bar_{index:02d}" for index in range(7)]
+    horizontal_bar_stimuli = [
+        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "horizontal_bars" / f"{name}.png"))
+        for name in horizontal_bar_ids
+    ]
+    horizontal_bar_grid = visual.ImageStim(
+        window, image=str(STIMULI_DIRECTORY / "horizontal_bar_grid.png")
+    )
 
 
 ## Scanner timing
@@ -428,11 +445,30 @@ def run_trial(condition):
 
     if condition == "SECTOR":
         grid, stimuli, angles, stimulus_ids = sector_grid, sector_stimuli, sector_angles, sector_ids
-    else:
+    elif condition == "VERTICAL_BAR":
         grid = bar_grid
         stimuli = [None, *bar_stimuli, None, *reversed(bar_stimuli), None]
         angles = None
         stimulus_ids = ["blank_grid", *bar_ids, "blank_grid", *reversed(bar_ids), "blank_grid"]
+    elif condition == "HORIZONTAL_BAR":
+        grid = horizontal_bar_grid
+        stimuli = [
+            None,
+            *horizontal_bar_stimuli,
+            None,
+            *reversed(horizontal_bar_stimuli),
+            None,
+        ]
+        angles = None
+        stimulus_ids = [
+            "blank_grid",
+            *horizontal_bar_ids,
+            "blank_grid",
+            *reversed(horizontal_bar_ids),
+            "blank_grid",
+        ]
+    else:
+        raise ValueError(f"Unknown condition: {condition}")
 
     log("trial_start", condition=condition, trial_number=trial_number)
     opacity = 1.0
@@ -441,7 +477,7 @@ def run_trial(condition):
 
     for index, stimulus in enumerate(stimuli):
         angle = angles[index] if angles else None
-        middle_bar = condition == "BAR" and stimulus_ids[index] == "vertical_bar_03"
+        middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
         state = {
             "condition": condition,
             "index": index,
@@ -474,7 +510,7 @@ def run_trial(condition):
     for loop in (1, 2):
         for index, stimulus in enumerate(stimuli):
             angle = angles[index] if angles else None
-            middle_bar = condition == "BAR" and stimulus_ids[index] == "vertical_bar_03"
+            middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
             tone_for(angle, stimulus is None, middle_bar).play()
             state = {
                 "condition": condition,
@@ -653,7 +689,7 @@ def run_experiment():
         wait_for_tr(SCANNER_DUMMY_TRS + 1)
         log("scanner_run_start", tr_index=tr_count)
 
-    trials = ["SECTOR"] * 3 + ["BAR"] * 3
+    trials = ["SECTOR", "VERTICAL_BAR", "HORIZONTAL_BAR"]
     random.shuffle(trials)
     log("trial_schedule", conditions=trials)
     log("experiment_start", timing_source="scanner_trigger" if is_fmri else "system_clock")
