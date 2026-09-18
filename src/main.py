@@ -7,8 +7,8 @@ Author: Chengran Li
 Experiment schedule:
 - Wait for scanner dummy volumes (fMRI runs only)
 - Show one rotating-sector, one vertical-bar, and one horizontal-bar trial in random order
-- Show each aperture sequence once
-- Repeat the same sequence twice using tones for imagery
+- Start each trial directly with imagery; do not show visible sector or bar masks
+- Repeat each spatial sequence twice using tones for imagery
 """
 
 import csv
@@ -33,6 +33,8 @@ from psychopy import sound, visual
 
 ## Experiment settings
 SCANNER_DUMMY_TRS = 5
+INTER_TRIAL_REST_TRS = 10
+FINAL_REST_TRS = 5
 DEFAULT_TR_SECONDS = 1.0
 MONITOR_NAME = "7T_Projector_NOVA"
 PROJECTOR_SIZE_PIX = (1920, 1200)
@@ -439,9 +441,9 @@ def tone_for(angle=None, blank_grid=False, middle_bar=False):
     return low_tone
 
 
-## Visual presentation and imagery
+## Imagery trials
 def run_trial(condition):
-    global active_grid, active_stimulus, active_stimulus_opacity
+    global active_grid, active_stimulus
 
     if condition == "SECTOR":
         grid, stimuli, angles, stimulus_ids = sector_grid, sector_stimuli, sector_angles, sector_ids
@@ -471,38 +473,8 @@ def run_trial(condition):
         raise ValueError(f"Unknown condition: {condition}")
 
     log("trial_start", condition=condition, trial_number=trial_number)
-    opacity = 1.0
-    opacity_step = 0.9 / len(stimuli)
-    previous_state = None
-
-    for index, stimulus in enumerate(stimuli):
-        angle = angles[index] if angles else None
-        middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
-        state = {
-            "condition": condition,
-            "index": index,
-            "stimulus_id": stimulus_ids[index],
-            "angle": angle,
-            "blank_grid": stimulus is None,
-        }
-        opacity -= opacity_step
-        state["opacity"] = opacity if stimulus is not None else 0
-        active_grid = grid
-        active_stimulus = stimulus
-        active_stimulus_opacity = state["opacity"]
-        if previous_state:
-            window.callOnFlip(lambda state=previous_state: log("stimulus_offset", **state))
-        window.callOnFlip(tone_for(angle, stimulus is None, middle_bar).play)
-        window.callOnFlip(lambda state=state: log_design_event("stimulus_onset", "visual", state))
-        window.callOnFlip(lambda state=state: log("reference_flip", **state))
-        draw_scene()
-        previous_state = state
-        wait(2)
-
     active_grid = grid
     active_stimulus = None
-    window.callOnFlip(lambda state=previous_state: log("stimulus_offset", **state))
-    window.callOnFlip(close_design_event)
     window.callOnFlip(lambda: log("imagery_onset", condition=condition))
     draw_scene()
     log("imagery_start", condition=condition)
@@ -696,7 +668,10 @@ def run_experiment():
     rest(1)
     for trial_number, condition in enumerate(trials, start=1):
         run_trial(condition)
-        rest(1, checkpoint=True)
+        if trial_number == len(trials):
+            rest(FINAL_REST_TRS * tr_seconds, checkpoint=True)
+        else:
+            rest(INTER_TRIAL_REST_TRS * tr_seconds, checkpoint=True)
 
     close_design_event()
     if is_fmri:
