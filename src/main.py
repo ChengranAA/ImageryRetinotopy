@@ -40,8 +40,8 @@ MONITOR_NAME = "7T_Projector_NOVA"
 PROJECTOR_SIZE_PIX = (1920, 1200)
 PROJECTOR_WIDTH_CM = 30.0
 PROJECTOR_DISTANCE_CM = 99.0
-GRID_OPACITY_MIN = 0.30
-GRID_OPACITY_MAX = 0.70
+GRID_OPACITY_MIN = 1.00
+GRID_OPACITY_MAX = 1.00
 GRID_OPACITY_PERIOD_SECONDS = 24.0
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 STIMULI_DIRECTORY = PROJECT_ROOT / "stimuli"
@@ -484,7 +484,7 @@ def run_trial(condition):
 
     # Two low beeps to establish the rhythm before imagery begins.
     # The first high beep is the actual imagery onset.
-    
+
     # # FIRST UPDATE
     # active_grid = None
     # active_stimulus = None
