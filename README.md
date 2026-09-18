@@ -2,7 +2,7 @@
 
 This PsychoPy experiment uses tone-paced imagery of rotating polar-angle
 sectors, horizontal sweeps of a vertical bar, and vertical sweeps of a
-horizontal bar. Each trial starts directly with two imagery repetitions. The
+horizontal bar. Each trial starts directly with three imagery repetitions. The
 sector and bar grids remain visible, but no sector or bar mask is shown.
 
 The experiment has two modes:
@@ -33,7 +33,7 @@ Press **Escape** at any time to stop safely and save the available data.
 For a complete run with TR = 1 second, open one terminal and start:
 
 ```sh
-mock_scanner --tr 1 --volumes 216 --trigger 5 --gui
+mock_scanner --tr 1 --volumes 308 --trigger 5 --gui
 ```
 
 In a second terminal, from this project directory, start:
@@ -93,7 +93,7 @@ Before the run, tell the participant to:
    trial.
 3. Start imagining immediately when the tone sequence begins; no visible sector
    or bar will be presented first.
-4. Use each tone to advance the imagined mask to its next position through two
+4. Use each tone to advance the imagined mask to its next position through three
    complete repetitions.
 5. Remain still; no button response is required.
 
@@ -128,10 +128,10 @@ Imagine 12 clockwise 60-degree wedge positions, starting at the top:
 ```
 
 Each imagined position lasts 2 seconds. The sector grid remains visible, no
-wedge is displayed, and the 12-position tone sequence repeats twice.
+wedge is displayed, and the 12-position tone sequence repeats three times.
 
-- Imagery phase: 48 seconds
-- Total sector trial: 48 seconds
+- Imagery phase: 72 seconds
+- Total sector trial: 72 seconds
 
 ### Vertical-bar imagery trial
 
@@ -145,10 +145,10 @@ blank,
 
 Each imagined position lasts 2 seconds. `vertical_bar_03` is the central bar.
 The vertical-bar grid remains visible, no bar is displayed, and the same
-17-position tone sequence repeats twice.
+17-position tone sequence repeats three times.
 
-- Imagery phase: 68 seconds
-- Total vertical-bar trial: 68 seconds
+- Imagery phase: 102 seconds
+- Total vertical-bar trial: 102 seconds
 
 ### Horizontal-bar imagery trial
 
@@ -163,10 +163,10 @@ blank,
 
 Each imagined position lasts 2 seconds. `horizontal_bar_03` is the central bar.
 The horizontal-bar grid remains visible, no bar is displayed, and the same
-17-position tone sequence repeats twice.
+17-position tone sequence repeats three times.
 
-- Imagery phase: 68 seconds
-- Total horizontal-bar trial: 68 seconds
+- Imagery phase: 102 seconds
+- Total horizontal-bar trial: 102 seconds
 
 ## Tones
 
@@ -182,15 +182,15 @@ timestamps, not measurements of physical acoustic onset.
 
 | Component | Total |
 |---|---:|
-| One sector imagery phase | 48 s |
-| Two bar imagery phases | 136 s |
+| One sector imagery phase | 72 s |
+| Two bar imagery phases | 204 s |
 | Initial rest | 1 s |
 | Two inter-trial rests | 20 s |
 | Final rest | 5 s |
-| **Task from trigger 6** | **210 s (3:30)** |
+| **Task from trigger 6** | **302 s (5:02)** |
 
-The five dummy intervals add 5 seconds. A complete fMRI run therefore uses 216
-triggers and lasts approximately 3:35 from trigger 1 through the final rest.
+The five dummy intervals add 5 seconds. A complete fMRI run therefore uses 308
+triggers and lasts approximately 5:07 from trigger 1 through the final rest.
 Each 2-second imagery position spans two scanner volumes.
 
 For other TR values, the program uses:
@@ -257,7 +257,7 @@ fMRI mode writes:
   `manifest.csv`.
 
 After removing the first five dummy volumes, a complete TR = 1 second run has
-211 task volumes and 211 PyPRF frames. Imagery, rest, and blank-transition
+303 task volumes and 303 PyPRF frames. Imagery, rest, and blank-transition
 frames remain black; imagined spatial identities are recorded in the event and
 design tables.
 
@@ -272,7 +272,7 @@ Complete this checklist in the scanner room:
 - Confirm HDMI/projector audio and that 440/880 Hz cues are distinguishable.
 - Run a short trigger test and inspect the JSON and trigger CSV.
 - Confirm that the first five fMRI volumes will be removed before matching the
-  data to the 211 PyPRF frames.
+  data to the 303 PyPRF frames.
 
 ## Verification status
 
@@ -280,7 +280,7 @@ The mock-scanner path previously completed the former 452-trigger, ten-trial run
 at TR = 2 seconds. It produced all timing tables and 447 PyPRF frames without an
 experiment error. A later checkpoint-timing test found all non-rest samples between
 1.991 and 2.013 seconds and confirmed that checkpoint writing is contained in
-the recorded rest. The new 216-trigger, imagery-only schedule at TR = 1 second
+the recorded rest. The new 308-trigger, imagery-only schedule at TR = 1 second
 still requires a complete mock-scanner run.
 
 The software is ready for mock-scanner and operator testing. Real data collection

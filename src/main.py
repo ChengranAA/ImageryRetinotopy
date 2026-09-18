@@ -8,7 +8,7 @@ Experiment schedule:
 - Wait for scanner dummy volumes (fMRI runs only)
 - Show one rotating-sector, one vertical-bar, and one horizontal-bar trial in random order
 - Start each trial directly with imagery; do not show visible sector or bar masks
-- Repeat each spatial sequence twice using tones for imagery
+- Repeat each spatial sequence three times using tones for imagery
 """
 
 import csv
@@ -479,7 +479,7 @@ def run_trial(condition):
     draw_scene()
     log("imagery_start", condition=condition)
 
-    for loop in (1, 2):
+    for loop in (1, 2, 3):
         for index, stimulus in enumerate(stimuli):
             angle = angles[index] if angles else None
             middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
