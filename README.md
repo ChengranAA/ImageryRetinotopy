@@ -1,10 +1,10 @@
-# Mental imagery retinotopy
+# Imagery and visual perception retinotopy
 
-This PsychoPy experiment uses tone-paced imagery of rotating polar-angle
+This PsychoPy experiment uses tone-paced sequences of rotating polar-angle
 sectors, horizontal sweeps of a vertical bar, and vertical sweeps of a
-horizontal bar. The dialog selects either a visible guide followed by imagery,
-or pure imagery. Both designs start each trial with a four-second grid and
-two-tone preview.
+horizontal bar. The dialog selects a visible guide followed by imagery, pure
+imagery, or visual perception. All three designs start each trial with a
+four-second grid and two-tone preview.
 
 The run type selects timing:
 
@@ -17,6 +17,8 @@ The design selects what the participant sees:
   repetitions with the grid and tones.
 - **Pure imagery:** three imagined repetitions with the grid and tones; no
   sector or bar mask appears.
+- **Visual perception:** three visible mask repetitions with the grid and tones;
+  each nonblank mask stays at full opacity for its position interval.
 
 The program entry point is `src/main.py`.
 
@@ -54,7 +56,7 @@ In the setup dialog select:
 
 - the subject ID;
 - `fMRI` as the run type;
-- `Visual guide + imagery` or `Pure imagery` as the design;
+- `Visual guide + imagery`, `Pure imagery`, or `Visual perception` as the design;
 - `1.0` as the TR;
 - the run number you want to record;
 - the presentation display;
@@ -85,7 +87,7 @@ received or Escape is pressed.
 |---|---|
 | Subject ID | Saved in every output filename and table. |
 | Run type | `Practice` or `fMRI`. |
-| Design | Visible guide followed by imagery, or pure imagery. |
+| Design | Visible guide followed by imagery, pure imagery, or visual perception. |
 | TR | Scanner repetition time in seconds; used only for fMRI. |
 | Run number | Positive integer entered manually; used only for fMRI. |
 | Display index | `0` is the primary display. |
@@ -104,6 +106,7 @@ Before the run, tell the participant to:
 3. Use the grid and two low tones to prepare for each trial.
 4. In visual-guide runs, watch the mask sequence once, then imagine it twice.
    In pure-imagery runs, imagine the sequence three times without a visible mask.
+   In visual-perception runs, watch the visible sequence three times.
 5. Use each position tone to advance to the next position.
 6. Remain still; no button response is required.
 
@@ -132,7 +135,8 @@ trials, and 5 TRs after the final trial.
 
 ### Sector trial
 
-Imagine 12 clockwise 60-degree wedge positions, starting at the top:
+The sector sequence covers 12 clockwise 60-degree wedge positions, starting at
+the top:
 
 ```text
 90, 60, 30, 0, 330, 300, 270, 240, 210, 180, 150, 120 degrees
@@ -140,15 +144,17 @@ Imagine 12 clockwise 60-degree wedge positions, starting at the top:
 
 Each position lasts 2 seconds. Visual-guide runs show the wedge sequence once,
 then cue two imagery repetitions. Pure-imagery runs cue three repetitions without
-showing wedges. The sector grid remains visible during both designs.
+showing wedges. Visual-perception runs show the wedge sequence three times at
+full opacity. The sector grid remains visible during all three designs.
 
 - Visual-guide sequence: 24 seconds visible + 48 seconds imagery
 - Pure-imagery sequence: 72 seconds imagery
-- Preview: 4 seconds; total trial: 76 seconds in either design
+- Visual-perception sequence: 72 seconds visible
+- Preview: 4 seconds; total trial: 76 seconds in every design
 
-### Vertical-bar imagery trial
+### Vertical-bar trial
 
-Imagine a vertical bar moving left to right and then right to left:
+The vertical-bar sequence moves left to right and then right to left:
 
 ```text
 blank, 00, 01, 02, 03, 04, 05, 06,
@@ -156,18 +162,20 @@ blank,
 06, 05, 04, 03, 02, 01, 00, blank
 ```
 
-Each imagined position lasts 2 seconds. `vertical_bar_03` is the central bar.
+Each position lasts 2 seconds. `vertical_bar_03` is the central bar.
 The vertical-bar grid remains visible. Visual-guide runs show the bar sequence
 once and cue two imagery repetitions; pure-imagery runs cue three repetitions
-without showing bars.
+without showing bars. Visual-perception runs show three visible repetitions at
+full opacity for every nonblank bar position.
 
 - Visual-guide sequence: 34 seconds visible + 68 seconds imagery
 - Pure-imagery sequence: 102 seconds imagery
-- Preview: 4 seconds; total trial: 106 seconds in either design
+- Visual-perception sequence: 102 seconds visible
+- Preview: 4 seconds; total trial: 106 seconds in every design
 
-### Horizontal-bar imagery trial
+### Horizontal-bar trial
 
-Imagine a horizontal bar moving from bottom to top and then top to bottom. It
+The horizontal-bar sequence moves from bottom to top and then top to bottom. It
 uses the same sequence structure as the vertical-bar trial:
 
 ```text
@@ -182,7 +190,8 @@ match the vertical-bar trial.
 
 - Visual-guide sequence: 34 seconds visible + 68 seconds imagery
 - Pure-imagery sequence: 102 seconds imagery
-- Preview: 4 seconds; total trial: 106 seconds in either design
+- Visual-perception sequence: 102 seconds visible
+- Preview: 4 seconds; total trial: 106 seconds in every design
 
 ## Tones
 
@@ -192,7 +201,7 @@ match the vertical-bar trial.
 - Tone duration: 250 ms, stereo.
 - Preview: two low tones, two seconds apart, with the trial grid visible.
 
-Visual-guide tones are scheduled on the mask flip. Imagery tone commands mark
+Visible-position tones are scheduled on the mask flip. Imagery tone commands mark
 the cued position onsets. These are software timestamps, not measurements of
 physical acoustic onset.
 
@@ -278,17 +287,20 @@ fMRI mode writes:
 
 The frame directory contains one PNG per **raw BOLD volume**. `frame_001.png`
 matches volume 1, and `manifest.csv` has the same `tr_index` as the BOLD volume.
-The first five dummy frames, rests, previews, visible-guide intervals, and
-blank-bar positions are black. During imagery, nonblank frames show the cued
-sector or bar position for the pRF model, even though no mask is displayed to
-the participant. The manifest and JSON log identify the selected design. At
-TR = 1 second, a complete run is expected to produce about 320 frames.
+The first five dummy frames, rests, previews, and blank-bar positions are black.
+In both imagery designs, nonblank imagery frames show the cued sector or bar
+position for the pRF model, even though no mask is displayed to the participant.
+Visible-guide intervals are black in that imagery model. In visual-perception
+runs, nonblank visual frames show the displayed sector or bar; every mask stays
+at full opacity on screen. The manifest and JSON log identify the selected
+design. At TR = 1 second, a complete run is expected to produce about 320 frames.
 
 This matches the one-frame-per-BOLD-volume convention used by the MATLAB
-`run_prf*.m` loaders. The visible-guide run's visual phase remains black in the
-model input so the fit uses imagery cues only. Compare the actual manifest and
-BOLD volume counts before fitting; the experiment cannot establish their
-absolute alignment from software triggers alone.
+`run_prf*.m` loaders. The visual-guide run's visual phase remains black in the
+model input so the fit uses imagery cues only; the visual-perception model uses
+the visible positions instead. Compare the actual manifest and BOLD volume
+counts before fitting; the experiment cannot establish their absolute alignment
+from software triggers alone.
 
 ## Before collecting real data
 
@@ -306,7 +318,7 @@ Complete this checklist in the scanner room:
 ## Verification status
 
 An earlier design completed a mock-scanner run and checkpoint-timing test. The
-two selectable designs and their full-volume model exports still require a
+three selectable designs and their full-volume model exports still require a
 complete mock-scanner run each, followed by checks against the saved timing
 tables and BOLD acquisition metadata.
 

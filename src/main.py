@@ -1,6 +1,6 @@
 """
 =======================================================
-Title: Mental imagery retinotopy experiment
+Title: Imagery and visual perception retinotopy experiment
 Author: Chengran Li
 =======================================================
 
@@ -8,8 +8,8 @@ Experiment schedule:
 - Wait for scanner dummy volumes (fMRI runs only)
 - Show one rotating-sector, one vertical-bar, and one horizontal-bar trial in random order
 - Preview each trial with its grid and two low tones
-- Either show one visible sequence followed by two imagery sequences, or
-  present three imagery sequences without a visible mask
+- Show one visible sequence followed by two imagery sequences, present three
+  imagery sequences without a visible mask, or show three visible sequences
 """
 
 import csv
@@ -37,7 +37,7 @@ SCANNER_DUMMY_TRS = 5
 INTER_TRIAL_REST_TRS = 10
 FINAL_REST_TRS = 5
 DEFAULT_TR_SECONDS = 1.0
-DESIGN_MODES = ("Visual guide + imagery", "Pure imagery")
+DESIGN_MODES = ("Visual guide + imagery", "Pure imagery", "Visual perception")
 MONITOR_NAME = "7T_Projector_NOVA"
 PROJECTOR_SIZE_PIX = (1920, 1200)
 PROJECTOR_WIDTH_CM = 30.0
@@ -141,8 +141,9 @@ def sample_for_volume(volume_onset, volume_offset):
 
 
 def pyprf_frame(sample, mask_cache, frame_size):
-    """Encode the cued imagery position for the analyzePRF model."""
-    if sample is None or sample["phase"] != "imagery" or sample["blank_grid"]:
+    """Encode the cued imagery or visible position for the analyzePRF model."""
+    model_phase = "visual" if design_mode == "Visual perception" else "imagery"
+    if sample is None or sample["phase"] != model_phase or sample["blank_grid"]:
         return Image.new("L", frame_size, 0)
 
     mask_path = PROJECT_ROOT / aperture_path(
@@ -489,7 +490,7 @@ def run_trial(condition):
     log("trial_start", condition=condition, trial_number=trial_number,
         design_mode=design_mode)
 
-    # Four-second grid and tone preview in both designs.
+    # Four-second grid and tone preview in every design.
     active_grid = grid
     active_stimulus = None
     window.callOnFlip(low_tone.play)
@@ -500,28 +501,42 @@ def run_trial(condition):
     low_tone.play()
     wait(2)
 
-    if design_mode == "Visual guide + imagery":
+    if design_mode != "Pure imagery":
         opacity = 1.0
         opacity_step = 0.9 / len(stimuli)
-        for index, stimulus in enumerate(stimuli):
-            angle = angles[index] if angles else None
-            middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
-            opacity -= opacity_step
-            state = {
-                "condition": condition,
-                "index": index,
-                "stimulus_id": stimulus_ids[index],
-                "angle": angle,
-                "blank_grid": stimulus is None,
-                "opacity": opacity if stimulus is not None else 0,
-            }
-            active_stimulus = stimulus
-            active_stimulus_opacity = state["opacity"]
-            window.callOnFlip(tone_for(angle, stimulus is None, middle_bar).play)
-            window.callOnFlip(lambda state=state: log_design_event(
-                "stimulus_onset", "visual", state))
-            draw_scene()
-            wait(2)
+        visual_loops = 3 if design_mode == "Visual perception" else 1
+        for loop in range(1, visual_loops + 1):
+            for index, stimulus in enumerate(stimuli):
+                angle = angles[index] if angles else None
+                middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
+                if design_mode == "Visual guide + imagery":
+                    opacity -= opacity_step
+                state = {
+                    "condition": condition,
+                    "loop": loop,
+                    "index": index,
+                    "stimulus_id": stimulus_ids[index],
+                    "angle": angle,
+                    "blank_grid": stimulus is None,
+                    "opacity": (1.0 if design_mode == "Visual perception" else opacity)
+                               if stimulus is not None else 0,
+                }
+                active_stimulus = stimulus
+                active_stimulus_opacity = state["opacity"]
+                window.callOnFlip(tone_for(angle, stimulus is None, middle_bar).play)
+                window.callOnFlip(lambda state=state: log_design_event(
+                    "stimulus_onset", "visual", state))
+                draw_scene()
+                wait(2)
+
+    if design_mode == "Visual perception":
+        active_grid = None
+        active_stimulus = None
+        draw_bullseye()
+        window.callOnFlip(close_design_event)
+        window.flip()
+        log("trial_end", condition=condition)
+        return True
 
     active_stimulus = None
     window.callOnFlip(lambda: log("imagery_onset", condition=condition))
