@@ -171,9 +171,9 @@ def save_pyprf_frames(run_label, timestamp):
     volume_intervals = []
     for index, onset in enumerate(trigger_times):
         following = trigger_times[index + 1] if index + 1 < len(trigger_times) else None
-        offset = following if following is not None else run_end
-        if offset is None or offset <= onset:
+        if following is None and run_end is None:
             break
+        offset = following if following is not None else onset + tr_seconds
         sample, overlap = (
             (None, 0.0) if index < SCANNER_DUMMY_TRS
             else sample_for_volume(onset, offset)
@@ -586,7 +586,7 @@ def save_fmri_timing_csv(run_label, timestamp):
         writer = csv.DictWriter(
             file,
             fieldnames=[
-                "subject_id", "run_number", "tr_seconds", "tr_index",
+                "subject_id", "run_number", "design_mode", "tr_seconds", "tr_index",
                 "trigger_time_seconds", "seconds_from_first_trigger",
                 "seconds_from_task_start", "phase",
             ],
@@ -596,6 +596,7 @@ def save_fmri_timing_csv(run_label, timestamp):
             writer.writerow({
                 "subject_id": subject_id,
                 "run_number": run_number,
+                "design_mode": design_mode,
                 "tr_seconds": tr_seconds,
                 "tr_index": index,
                 "trigger_time_seconds": f"{trigger_time:.6f}",
@@ -635,7 +636,7 @@ def save_fmri_timing_csv(run_label, timestamp):
         writer = csv.DictWriter(
             file,
             fieldnames=[
-                "phase", "condition", "loop", "index", "stimulus_id", "angle", "blank_grid",
+                "design_mode", "phase", "condition", "loop", "index", "stimulus_id", "angle", "blank_grid",
                 "aperture_path", "onset_seconds_from_first_trigger", "onset_seconds_from_task_start",
                 "tr_index", "duration_seconds", "trial_number", "opacity", "offset_seconds_from_first_trigger",
             ],
@@ -647,6 +648,7 @@ def save_fmri_timing_csv(run_label, timestamp):
                 continue
             offset = sample.get("offset")
             writer.writerow({
+                "design_mode": design_mode,
                 "phase": sample["phase"],
                 "condition": sample["condition"],
                 "loop": sample.get("loop", ""),
@@ -667,7 +669,7 @@ def save_fmri_timing_csv(run_label, timestamp):
     volume_path = LOG_DIRECTORY / f"fmri_volumes_{subject_id}_{run_label}_{timestamp}.csv"
     with volume_path.open("w", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=[
-            "tr_index", "phase", "onset_seconds_from_first_trigger",
+            "tr_index", "design_mode", "phase", "onset_seconds_from_first_trigger",
             "duration_seconds", "boundary_source", "samples_json",
         ])
         writer.writeheader()
@@ -675,7 +677,9 @@ def save_fmri_timing_csv(run_label, timestamp):
             following = trigger_times[index + 1] if index + 1 < len(trigger_times) else None
             run_end = next((e["time"] for e in reversed(events)
                             if e["event"] in {"display_cleared", "experiment_end"}), None)
-            offset = following if following is not None else run_end
+            offset = following if following is not None else (
+                onset + tr_seconds if run_end is not None else None
+            )
             overlaps = []
             if offset is not None:
                 for sample_index, sample in enumerate(design_events):
@@ -689,10 +693,11 @@ def save_fmri_timing_csv(run_label, timestamp):
                                          "onset_within_volume": start - onset,
                                          "duration_seconds": end - start})
             writer.writerow({"tr_index": index + 1,
+                             "design_mode": design_mode,
                              "phase": "dummy" if index < SCANNER_DUMMY_TRS else "task",
                              "onset_seconds_from_first_trigger": onset - first_trigger_time,
                              "duration_seconds": "" if offset is None else offset - onset,
-                             "boundary_source": "next_trigger" if following is not None else "run_end" if offset is not None else "pending",
+                             "boundary_source": "next_trigger" if following is not None else "nominal_last_tr" if offset is not None else "pending",
                              "samples_json": json.dumps(overlaps)})
 
     save_pyprf_frames(run_label, timestamp)

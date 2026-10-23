@@ -293,14 +293,19 @@ position for the pRF model, even though no mask is displayed to the participant.
 Visible-guide intervals are black in that imagery model. In visual-perception
 runs, nonblank visual frames show the displayed sector or bar; every mask stays
 at full opacity on screen. The manifest and JSON log identify the selected
-design. At TR = 1 second, a complete run is expected to produce about 320 frames.
+design. The trigger, design, and volume CSVs also include `design_mode`. At TR =
+1 second, a complete run is expected to produce 320 frames and 320 trigger rows.
+The final volume interval uses the entered TR because no later trigger marks its
+end; the volume CSV labels this boundary `nominal_last_tr`.
 
 This matches the one-frame-per-BOLD-volume convention used by the MATLAB
-`run_prf*.m` loaders. The visual-guide run's visual phase remains black in the
-model input so the fit uses imagery cues only; the visual-perception model uses
-the visible positions instead. Compare the actual manifest and BOLD volume
-counts before fitting; the experiment cannot establish their absolute alignment
-from software triggers alone.
+`run_prf*.m` loaders without shifting or padding the frames. The visual-guide
+run's visual phase remains black in the model input so the fit uses imagery cues
+only; the visual-perception model uses the visible positions instead. Compare
+the actual manifest and BOLD volume counts before fitting. Direct loading
+requires the acquisition to save one BOLD volume per received trigger and
+preprocessing to retain the same volumes. The experiment cannot establish
+that absolute alignment from software triggers alone.
 
 ## Before collecting real data
 
