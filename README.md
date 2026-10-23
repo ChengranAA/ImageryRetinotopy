@@ -2,13 +2,21 @@
 
 This PsychoPy experiment uses tone-paced imagery of rotating polar-angle
 sectors, horizontal sweeps of a vertical bar, and vertical sweeps of a
-horizontal bar. Each trial starts directly with three imagery repetitions. The
-sector and bar grids remain visible, but no sector or bar mask is shown.
+horizontal bar. The dialog selects either a visible guide followed by imagery,
+or pure imagery. Both designs start each trial with a four-second grid and
+two-tone preview.
 
-The experiment has two modes:
+The run type selects timing:
 
 - **Practice:** runs from the computer clock in a window.
 - **fMRI:** runs fullscreen and advances from scanner triggers.
+
+The design selects what the participant sees:
+
+- **Visual guide + imagery:** one visible mask sequence, then two imagined
+  repetitions with the grid and tones.
+- **Pure imagery:** three imagined repetitions with the grid and tones; no
+  sector or bar mask appears.
 
 The program entry point is `src/main.py`.
 
@@ -33,7 +41,7 @@ Press **Escape** at any time to stop safely and save the available data.
 For a complete run with TR = 1 second, open one terminal and start:
 
 ```sh
-mock_scanner --tr 1 --volumes 308 --trigger 5 --gui
+mock_scanner --tr 1 --volumes 320 --trigger 5 --gui
 ```
 
 In a second terminal, from this project directory, start:
@@ -46,6 +54,7 @@ In the setup dialog select:
 
 - the subject ID;
 - `fMRI` as the run type;
+- `Visual guide + imagery` or `Pure imagery` as the design;
 - `1.0` as the TR;
 - the run number you want to record;
 - the presentation display;
@@ -76,6 +85,7 @@ received or Escape is pressed.
 |---|---|
 | Subject ID | Saved in every output filename and table. |
 | Run type | `Practice` or `fMRI`. |
+| Design | Visible guide followed by imagery, or pure imagery. |
 | TR | Scanner repetition time in seconds; used only for fMRI. |
 | Run number | Positive integer entered manually; used only for fMRI. |
 | Display index | `0` is the primary display. |
@@ -91,11 +101,11 @@ Before the run, tell the participant to:
 1. Keep looking at the central green fixation point.
 2. Use the visible grid to identify the sector, vertical-bar, or horizontal-bar
    trial.
-3. Start imagining immediately when the tone sequence begins; no visible sector
-   or bar will be presented first.
-4. Use each tone to advance the imagined mask to its next position through three
-   complete repetitions.
-5. Remain still; no button response is required.
+3. Use the grid and two low tones to prepare for each trial.
+4. In visual-guide runs, watch the mask sequence once, then imagine it twice.
+   In pure-imagery runs, imagine the sequence three times without a visible mask.
+5. Use each position tone to advance to the next position.
+6. Remain still; no button response is required.
 
 The script does not contain an instruction screen or collect behavioral reports,
 so the operator must give these instructions verbally.
@@ -111,7 +121,8 @@ The complete order is:
 1. Five dummy scanner volumes in fMRI mode.
 2. Trigger 6 starts the task.
 3. Initial fixation rest.
-4. Three randomized trials; the first two are followed by 10 TRs of fixation and
+4. Three randomized trials, each with a four-second grid and tone preview. The
+   first two are followed by 10 TRs of fixation and
    the final trial is followed by 5 TRs of fixation.
 5. Data are checkpointed during each rest.
 6. Final data and PyPRF files are written before the window closes.
@@ -119,7 +130,7 @@ The complete order is:
 There are 4 rest periods: 1 TR before trial 1, 10 TRs after each of the first two
 trials, and 5 TRs after the final trial.
 
-### Sector imagery trial
+### Sector trial
 
 Imagine 12 clockwise 60-degree wedge positions, starting at the top:
 
@@ -127,11 +138,13 @@ Imagine 12 clockwise 60-degree wedge positions, starting at the top:
 90, 60, 30, 0, 330, 300, 270, 240, 210, 180, 150, 120 degrees
 ```
 
-Each imagined position lasts 2 seconds. The sector grid remains visible, no
-wedge is displayed, and the 12-position tone sequence repeats three times.
+Each position lasts 2 seconds. Visual-guide runs show the wedge sequence once,
+then cue two imagery repetitions. Pure-imagery runs cue three repetitions without
+showing wedges. The sector grid remains visible during both designs.
 
-- Imagery phase: 72 seconds
-- Total sector trial: 72 seconds
+- Visual-guide sequence: 24 seconds visible + 48 seconds imagery
+- Pure-imagery sequence: 72 seconds imagery
+- Preview: 4 seconds; total trial: 76 seconds in either design
 
 ### Vertical-bar imagery trial
 
@@ -144,11 +157,13 @@ blank,
 ```
 
 Each imagined position lasts 2 seconds. `vertical_bar_03` is the central bar.
-The vertical-bar grid remains visible, no bar is displayed, and the same
-17-position tone sequence repeats three times.
+The vertical-bar grid remains visible. Visual-guide runs show the bar sequence
+once and cue two imagery repetitions; pure-imagery runs cue three repetitions
+without showing bars.
 
-- Imagery phase: 102 seconds
-- Total vertical-bar trial: 102 seconds
+- Visual-guide sequence: 34 seconds visible + 68 seconds imagery
+- Pure-imagery sequence: 102 seconds imagery
+- Preview: 4 seconds; total trial: 106 seconds in either design
 
 ### Horizontal-bar imagery trial
 
@@ -162,11 +177,12 @@ blank,
 ```
 
 Each imagined position lasts 2 seconds. `horizontal_bar_03` is the central bar.
-The horizontal-bar grid remains visible, no bar is displayed, and the same
-17-position tone sequence repeats three times.
+The horizontal-bar grid remains visible. The sequence timing and repetitions
+match the vertical-bar trial.
 
-- Imagery phase: 102 seconds
-- Total horizontal-bar trial: 102 seconds
+- Visual-guide sequence: 34 seconds visible + 68 seconds imagery
+- Pure-imagery sequence: 102 seconds imagery
+- Preview: 4 seconds; total trial: 106 seconds in either design
 
 ## Tones
 
@@ -174,29 +190,33 @@ The horizontal-bar grid remains visible, no bar is displayed, and the same
 - High tone: 880 Hz for sector cardinal positions, the central bar, and blank
   bar-transition positions.
 - Tone duration: 250 ms, stereo.
+- Preview: two low tones, two seconds apart, with the trial grid visible.
 
-The imagery tone command marks each imagined-position onset. These are software
-timestamps, not measurements of physical acoustic onset.
+Visual-guide tones are scheduled on the mask flip. Imagery tone commands mark
+the cued position onsets. These are software timestamps, not measurements of
+physical acoustic onset.
 
 ## Timing at TR = 1 second
 
 | Component | Total |
 |---|---:|
-| One sector imagery phase | 72 s |
-| Two bar imagery phases | 204 s |
+| One sector sequence | 72 s |
+| Two bar sequences | 204 s |
+| Three grid and tone previews | 12 s |
 | Initial rest | 1 s |
 | Two inter-trial rests | 20 s |
 | Final rest | 5 s |
-| **Task from trigger 6** | **302 s (5:02)** |
+| **Task from trigger 6** | **314 s (5:14)** |
 
-The five dummy intervals add 5 seconds. A complete fMRI run therefore uses 308
-triggers and lasts approximately 5:07 from trigger 1 through the final rest.
-Each 2-second imagery position spans two scanner volumes.
+The five dummy intervals add 5 seconds. A complete fMRI run therefore uses about
+320 triggers and lasts approximately 5:19 from trigger 1 through the final rest.
+Each 2-second position spans two scanner volumes at TR = 1 second.
 
 For other TR values, the program uses:
 
 ```text
-imagery position   = max(1, ceil(2 / TR))
+preview tone gap   = max(1, ceil(2 / TR))
+position interval  = max(1, ceil(2 / TR))
 initial rest       = max(1, ceil(1 / TR))
 inter-trial rest   = 10 TRs
 final rest         = 5 TRs
@@ -215,7 +235,7 @@ A TR that does not divide 2 seconds can therefore lengthen individual samples.
 - Practice mode: 1080 × 720 window
 - Background: `stimuli/noise_gaussian_1920x1080.png`
 - Fixation: green center inside a black outer circle
-- Grid opacity: sinusoidal cycle from 0.30 to 0.70 every 24 seconds
+- Grid opacity: constant 1.0
 
 These geometry values are configuration values, not proof of physical
 calibration. Confirm them on the actual projector before data collection.
@@ -250,16 +270,25 @@ fMRI mode writes:
 - `log_<subject>_fMRI_runNN_<timestamp>.json` — complete event history;
 - `fmri_triggers_<subject>_runNN_<timestamp>.csv` — trigger times and indices;
 - `fmri_events_<subject>_runNN_<timestamp>.csv` — event-to-trigger mapping;
-- `fmri_prf_design_<subject>_runNN_<timestamp>.csv` — imagery and rest
+- `fmri_prf_design_<subject>_runNN_<timestamp>.csv` — preview, visual, imagery, and rest
   design intervals;
 - `fmri_volumes_<subject>_runNN_<timestamp>.csv` — design overlap per volume;
-- `pyprf_<subject>_runNN_<timestamp>_frames/` — binary PyPRF masks and
+- `pyprf_<subject>_runNN_<timestamp>_frames/` — binary model masks and
   `manifest.csv`.
 
-After removing the first five dummy volumes, a complete TR = 1 second run has
-303 task volumes and 303 PyPRF frames. Imagery, rest, and blank-transition
-frames remain black; imagined spatial identities are recorded in the event and
-design tables.
+The frame directory contains one PNG per **raw BOLD volume**. `frame_001.png`
+matches volume 1, and `manifest.csv` has the same `tr_index` as the BOLD volume.
+The first five dummy frames, rests, previews, visible-guide intervals, and
+blank-bar positions are black. During imagery, nonblank frames show the cued
+sector or bar position for the pRF model, even though no mask is displayed to
+the participant. The manifest and JSON log identify the selected design. At
+TR = 1 second, a complete run is expected to produce about 320 frames.
+
+This matches the one-frame-per-BOLD-volume convention used by the MATLAB
+`run_prf*.m` loaders. The visible-guide run's visual phase remains black in the
+model input so the fit uses imagery cues only. Compare the actual manifest and
+BOLD volume counts before fitting; the experiment cannot establish their
+absolute alignment from software triggers alone.
 
 ## Before collecting real data
 
@@ -271,21 +300,18 @@ Complete this checklist in the scanner room:
 - Confirm the TR entered in the dialog matches the acquisition protocol.
 - Confirm HDMI/projector audio and that 440/880 Hz cues are distinguishable.
 - Run a short trigger test and inspect the JSON and trigger CSV.
-- Confirm that the first five fMRI volumes will be removed before matching the
-  data to the 303 PyPRF frames.
+- Confirm that trigger 1 corresponds to raw BOLD volume 1 and that preprocessing
+  retained the five dummy volumes before matching to the model frames.
 
 ## Verification status
 
-The mock-scanner path previously completed the former 452-trigger, ten-trial run
-at TR = 2 seconds. It produced all timing tables and 447 PyPRF frames without an
-experiment error. A later checkpoint-timing test found all non-rest samples between
-1.991 and 2.013 seconds and confirmed that checkpoint writing is contained in
-the recorded rest. The new 308-trigger, imagery-only schedule at TR = 1 second
-still requires a complete mock-scanner run.
+An earlier design completed a mock-scanner run and checkpoint-timing test. The
+two selectable designs and their full-volume model exports still require a
+complete mock-scanner run each, followed by checks against the saved timing
+tables and BOLD acquisition metadata.
 
-The software is ready for mock-scanner and operator testing. Real data collection
-still requires projector, audio, and physical scanner-trigger acceptance in the
-scanner room.
+Real data collection also requires projector, audio, and physical scanner-trigger
+acceptance in the scanner room.
 
 Syntax check:
 

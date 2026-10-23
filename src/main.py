@@ -7,8 +7,9 @@ Author: Chengran Li
 Experiment schedule:
 - Wait for scanner dummy volumes (fMRI runs only)
 - Show one rotating-sector, one vertical-bar, and one horizontal-bar trial in random order
-- Start each trial directly with imagery; do not show visible sector or bar masks
-- Repeat each spatial sequence three times using tones for imagery
+- Preview each trial with its grid and two low tones
+- Either show one visible sequence followed by two imagery sequences, or
+  present three imagery sequences without a visible mask
 """
 
 import csv
@@ -36,6 +37,7 @@ SCANNER_DUMMY_TRS = 5
 INTER_TRIAL_REST_TRS = 10
 FINAL_REST_TRS = 5
 DEFAULT_TR_SECONDS = 1.0
+DESIGN_MODES = ("Visual guide + imagery", "Pure imagery")
 MONITOR_NAME = "7T_Projector_NOVA"
 PROJECTOR_SIZE_PIX = (1920, 1200)
 PROJECTOR_WIDTH_CM = 30.0
@@ -54,6 +56,7 @@ trigger_times = []
 design_events = []
 subject_id = "unknown"
 experiment_type = "Practice"
+design_mode = DESIGN_MODES[0]
 run_number = None
 display_screen = 0
 tr_seconds = DEFAULT_TR_SECONDS
@@ -138,8 +141,8 @@ def sample_for_volume(volume_onset, volume_offset):
 
 
 def pyprf_frame(sample, mask_cache, frame_size):
-    """Create the binary spatial-stimulation frame expected by PyPRF."""
-    if sample is None or sample["phase"] != "visual" or sample["blank_grid"]:
+    """Encode the cued imagery position for the analyzePRF model."""
+    if sample is None or sample["phase"] != "imagery" or sample["blank_grid"]:
         return Image.new("L", frame_size, 0)
 
     mask_path = PROJECT_ROOT / aperture_path(
@@ -153,22 +156,27 @@ def pyprf_frame(sample, mask_cache, frame_size):
 
 
 def save_pyprf_frames(run_label, timestamp):
-    """Save one PyPRF-compatible stimulus-location PNG per retained volume."""
+    """Save one model frame per raw BOLD volume, including dummy volumes."""
     global pyprf_frame_count
 
-    task_triggers = trigger_times[SCANNER_DUMMY_TRS:]
+    if len(trigger_times) <= SCANNER_DUMMY_TRS:
+        return
+    task_start = trigger_times[SCANNER_DUMMY_TRS]
     run_end = next(
         (record["time"] for record in reversed(events)
          if record["event"] in {"display_cleared", "experiment_end"}),
         None,
     )
     volume_intervals = []
-    for index, onset in enumerate(task_triggers):
-        following = task_triggers[index + 1] if index + 1 < len(task_triggers) else None
+    for index, onset in enumerate(trigger_times):
+        following = trigger_times[index + 1] if index + 1 < len(trigger_times) else None
         offset = following if following is not None else run_end
         if offset is None or offset <= onset:
             break
-        sample, overlap = sample_for_volume(onset, offset)
+        sample, overlap = (
+            (None, 0.0) if index < SCANNER_DUMMY_TRS
+            else sample_for_volume(onset, offset)
+        )
         volume_intervals.append((onset, offset, sample, overlap))
 
     if not volume_intervals:
@@ -192,18 +200,20 @@ def save_pyprf_frames(run_label, timestamp):
             "frame", "tr_index", "trigger_time_seconds", "seconds_from_task_start",
             "volume_duration_seconds", "phase", "condition", "stimulus_id",
             "blank_grid", "aperture_path", "trial_number", "opacity",
-            "dominant_overlap_seconds",
+            "dominant_overlap_seconds", "design_mode",
         ])
         writer.writeheader()
-        task_start = task_triggers[0]
         for index, (onset, offset, sample, overlap) in enumerate(volume_intervals, start=1):
             writer.writerow({
                 "frame": f"frame_{index:03d}.png",
-                "tr_index": SCANNER_DUMMY_TRS + index,
+                "tr_index": index,
                 "trigger_time_seconds": f"{onset:.6f}",
                 "seconds_from_task_start": f"{onset - task_start:.6f}",
                 "volume_duration_seconds": f"{offset - onset:.6f}",
-                "phase": "" if sample is None else sample["phase"],
+                "phase": (
+                    "dummy" if index <= SCANNER_DUMMY_TRS
+                    else "" if sample is None else sample["phase"]
+                ),
                 "condition": "" if sample is None else sample["condition"],
                 "stimulus_id": "" if sample is None else sample["stimulus_id"],
                 "blank_grid": True if sample is None else sample["blank_grid"],
@@ -213,12 +223,13 @@ def save_pyprf_frames(run_label, timestamp):
                 "trial_number": "" if sample is None else sample["trial_number"],
                 "opacity": "" if sample is None else sample["opacity"],
                 "dominant_overlap_seconds": f"{overlap:.6f}",
+                "design_mode": design_mode,
             })
 
 
 ## Experiment information window
 def show_dialogs():
-    global subject_id, experiment_type, run_number, tr_seconds, display_screen
+    global subject_id, experiment_type, design_mode, run_number, tr_seconds, display_screen
 
     outputs = list(dict.fromkeys(device["name"] for device in sounddevice.query_devices()
                                  if device["max_output_channels"] >= 2))
@@ -232,6 +243,7 @@ def show_dialogs():
     dialog = gui.Dlg(title="Imagery Retinotopy", alwaysOnTop=True)
     dialog.addField("Subject ID:")
     dialog.addField("Run type", choices=["Practice", "fMRI"])
+    dialog.addField("Design", choices=DESIGN_MODES)
     dialog.addField("TR (seconds; fMRI only)", initial=DEFAULT_TR_SECONDS)
     dialog.addField("Run number (fMRI only)", initial=1)
     dialog.addField("Presentation display index (0=primary)", initial=0)
@@ -240,20 +252,21 @@ def show_dialogs():
     if not dialog.OK:
         return False
 
-    prefs.hardware["audioDevice"] = [data[5]]
-    display_screen = int(data[4])
+    prefs.hardware["audioDevice"] = [data[6]]
+    display_screen = int(data[5])
     if display_screen < 0:
         raise ValueError("Presentation display index must be nonnegative")
     subject_id = data[0] or "unknown"
     experiment_type = data[1]
+    design_mode = data[2]
     if experiment_type == "fMRI":
         try:
-            tr_seconds = float(data[2])
+            tr_seconds = float(data[3])
             if not math.isfinite(tr_seconds) or tr_seconds <= 0:
                 raise ValueError
         except (TypeError, ValueError):
             tr_seconds = DEFAULT_TR_SECONDS
-        run_number = int(data[3])
+        run_number = int(data[4])
         if run_number < 1:
             raise ValueError("Run number must be a positive integer")
 
@@ -261,9 +274,10 @@ def show_dialogs():
         "dialog_complete",
         subject_id=subject_id,
         experiment_type=experiment_type,
+        design_mode=design_mode,
         run_number=run_number,
         display_screen=display_screen,
-        audio_device=data[5],
+        audio_device=data[6],
         tr_seconds=tr_seconds if experiment_type == "fMRI" else None,
     )
     return True
@@ -443,7 +457,7 @@ def tone_for(angle=None, blank_grid=False, middle_bar=False):
 
 ## Imagery trials
 def run_trial(condition):
-    global active_grid, active_stimulus
+    global active_grid, active_stimulus, active_stimulus_opacity
 
     if condition == "SECTOR":
         grid, stimuli, angles, stimulus_ids = sector_grid, sector_stimuli, sector_angles, sector_ids
@@ -472,64 +486,50 @@ def run_trial(condition):
     else:
         raise ValueError(f"Unknown condition: {condition}")
 
-    # start jlb change
+    log("trial_start", condition=condition, trial_number=trial_number,
+        design_mode=design_mode)
 
-    # log("trial_start", condition=condition, trial_number=trial_number)
-    # active_grid = grid
-    # active_stimulus = None
-    # window.callOnFlip(lambda: log("imagery_onset", condition=condition))
-    # draw_scene()
-    # log("imagery_start", condition=condition)
-        log("trial_start", condition=condition, trial_number=trial_number)
-
-    # Two low beeps to establish the rhythm before imagery begins.
-    # The first high beep is the actual imagery onset.
-
-    # # FIRST UPDATE
-    # active_grid = None
-    # active_stimulus = None
-    # draw_bullseye()
-    # window.flip()
-
-    # low_tone.play()
-    # wait(2)
-
-    # low_tone.play()
-    # wait(2)
-
-    # # Imagery starts on the first high beep.
-    # active_grid = grid
-    # active_stimulus = None
-    # high_tone.play()
-    # window.callOnFlip(lambda: log("imagery_onset", condition=condition))
-    # draw_scene()
-    # log("imagery_start", condition=condition)
-
-    # SECOND UPDATE
-        log("trial_start", condition=condition, trial_number=trial_number)
-
-    # Show the grid on the first low beep so the participant
-    # knows which stimulus they are about to imagine.
+    # Four-second grid and tone preview in both designs.
     active_grid = grid
     active_stimulus = None
-    low_tone.play()
+    window.callOnFlip(low_tone.play)
+    window.callOnFlip(lambda: log_design_event(
+        "preview_start", "preview", {"condition": condition}))
     draw_scene()
-    log("grid_preview_start", condition=condition)
-
-    # Second low beep, maintaining the same 2-second rhythm
     wait(2)
     low_tone.play()
-
-    # Imagery starts on the first high beep
     wait(2)
-    high_tone.play()
+
+    if design_mode == "Visual guide + imagery":
+        opacity = 1.0
+        opacity_step = 0.9 / len(stimuli)
+        for index, stimulus in enumerate(stimuli):
+            angle = angles[index] if angles else None
+            middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
+            opacity -= opacity_step
+            state = {
+                "condition": condition,
+                "index": index,
+                "stimulus_id": stimulus_ids[index],
+                "angle": angle,
+                "blank_grid": stimulus is None,
+                "opacity": opacity if stimulus is not None else 0,
+            }
+            active_stimulus = stimulus
+            active_stimulus_opacity = state["opacity"]
+            window.callOnFlip(tone_for(angle, stimulus is None, middle_bar).play)
+            window.callOnFlip(lambda state=state: log_design_event(
+                "stimulus_onset", "visual", state))
+            draw_scene()
+            wait(2)
+
+    active_stimulus = None
     window.callOnFlip(lambda: log("imagery_onset", condition=condition))
     draw_scene()
     log("imagery_start", condition=condition)
 
-    # end jlb change
-
-    for loop in (1, 2, 3):
+    imagery_loops = 2 if design_mode == "Visual guide + imagery" else 3
+    for loop in range(1, imagery_loops + 1):
         for index, stimulus in enumerate(stimuli):
             angle = angles[index] if angles else None
             middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
