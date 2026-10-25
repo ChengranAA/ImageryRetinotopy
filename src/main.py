@@ -490,16 +490,22 @@ def run_trial(condition):
     log("trial_start", condition=condition, trial_number=trial_number,
         design_mode=design_mode)
 
-    # Four-second grid and tone preview in every design.
     active_grid = grid
     active_stimulus = None
-    window.callOnFlip(low_tone.play)
-    window.callOnFlip(lambda: log_design_event(
-        "preview_start", "preview", {"condition": condition}))
-    draw_scene()
-    wait(2)
-    low_tone.play()
-    wait(2)
+    if design_mode != "Visual perception":
+        # The latest imagery-only design plays the first low tone before the grid flip.
+        if design_mode == "Pure imagery":
+            low_tone.play()
+        else:
+            window.callOnFlip(low_tone.play)
+        window.callOnFlip(lambda: log_design_event(
+            "preview_start", "preview", {"condition": condition}))
+        draw_scene()
+        if design_mode == "Pure imagery":
+            log("grid_preview_start", condition=condition)
+        wait(2)
+        low_tone.play()
+        wait(2)
 
     if design_mode != "Pure imagery":
         opacity = 1.0
@@ -539,6 +545,8 @@ def run_trial(condition):
         return True
 
     active_stimulus = None
+    if design_mode == "Pure imagery":
+        high_tone.play()
     window.callOnFlip(lambda: log("imagery_onset", condition=condition))
     draw_scene()
     log("imagery_start", condition=condition)

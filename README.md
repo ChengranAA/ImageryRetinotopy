@@ -3,8 +3,9 @@
 This PsychoPy experiment uses tone-paced sequences of rotating polar-angle
 sectors, horizontal sweeps of a vertical bar, and vertical sweeps of a
 horizontal bar. The dialog selects a visible guide followed by imagery, pure
-imagery, or visual perception. All three designs start each trial with a
-four-second grid and two-tone preview.
+imagery, or visual perception. The two imagery designs start each trial with a
+four-second grid and two-tone preview. Visual perception starts directly with
+the visible sequence.
 
 The run type selects timing:
 
@@ -40,10 +41,12 @@ Press **Escape** at any time to stop safely and save the available data.
 
 ## Mock-scanner test
 
-For a complete run with TR = 1 second, open one terminal and start:
+For a complete TR = 1 second run, choose the mock-scanner volume count that
+matches the design. Open one terminal and start either:
 
 ```sh
-mock_scanner --tr 1 --volumes 320 --trigger 5 --gui
+mock_scanner --tr 1 --volumes 320 --trigger 5 --gui  # either imagery design
+mock_scanner --tr 1 --volumes 308 --trigger 5 --gui  # visual perception
 ```
 
 In a second terminal, from this project directory, start:
@@ -103,7 +106,8 @@ Before the run, tell the participant to:
 1. Keep looking at the central green fixation point.
 2. Use the visible grid to identify the sector, vertical-bar, or horizontal-bar
    trial.
-3. Use the grid and two low tones to prepare for each trial.
+3. In imagery runs, use the grid and two low tones to prepare for each trial.
+   Perception trials begin with the visible position sequence.
 4. In visual-guide runs, watch the mask sequence once, then imagine it twice.
    In pure-imagery runs, imagine the sequence three times without a visible mask.
    In visual-perception runs, watch the visible sequence three times.
@@ -124,9 +128,10 @@ The complete order is:
 1. Five dummy scanner volumes in fMRI mode.
 2. Trigger 6 starts the task.
 3. Initial fixation rest.
-4. Three randomized trials, each with a four-second grid and tone preview. The
-   first two are followed by 10 TRs of fixation and
-   the final trial is followed by 5 TRs of fixation.
+4. Three randomized trials. Imagery designs include a four-second grid and tone
+   preview before each trial; visual perception starts directly with the first
+   position. The first two trials are followed by 10 TRs of fixation and the
+   final trial is followed by 5 TRs of fixation.
 5. Data are checkpointed during each rest.
 6. Final data and PyPRF files are written before the window closes.
 
@@ -150,7 +155,8 @@ full opacity. The sector grid remains visible during all three designs.
 - Visual-guide sequence: 24 seconds visible + 48 seconds imagery
 - Pure-imagery sequence: 72 seconds imagery
 - Visual-perception sequence: 72 seconds visible
-- Preview: 4 seconds; total trial: 76 seconds in every design
+- Imagery preview: 4 seconds; imagery-design trial: 76 seconds
+- Visual-perception trial: 72 seconds, without a preview
 
 ### Vertical-bar trial
 
@@ -171,7 +177,8 @@ full opacity for every nonblank bar position.
 - Visual-guide sequence: 34 seconds visible + 68 seconds imagery
 - Pure-imagery sequence: 102 seconds imagery
 - Visual-perception sequence: 102 seconds visible
-- Preview: 4 seconds; total trial: 106 seconds in every design
+- Imagery preview: 4 seconds; imagery-design trial: 106 seconds
+- Visual-perception trial: 102 seconds, without a preview
 
 ### Horizontal-bar trial
 
@@ -191,7 +198,8 @@ match the vertical-bar trial.
 - Visual-guide sequence: 34 seconds visible + 68 seconds imagery
 - Pure-imagery sequence: 102 seconds imagery
 - Visual-perception sequence: 102 seconds visible
-- Preview: 4 seconds; total trial: 106 seconds in every design
+- Imagery preview: 4 seconds; imagery-design trial: 106 seconds
+- Visual-perception trial: 102 seconds, without a preview
 
 ## Tones
 
@@ -199,7 +207,10 @@ match the vertical-bar trial.
 - High tone: 880 Hz for sector cardinal positions, the central bar, and blank
   bar-transition positions.
 - Tone duration: 250 ms, stereo.
-- Preview: two low tones, two seconds apart, with the trial grid visible.
+- Imagery preview: two low tones, two seconds apart, with the trial grid visible.
+- Pure imagery also plays a separate high onset tone immediately before its
+  first position tone, matching the latest `imagery-only` branch.
+- Visual perception has no preview tones; each position keeps its sequence tone.
 
 Visible-position tones are scheduled on the mask flip. Imagery tone commands mark
 the cued position onsets. These are software timestamps, not measurements of
@@ -211,20 +222,21 @@ physical acoustic onset.
 |---|---:|
 | One sector sequence | 72 s |
 | Two bar sequences | 204 s |
-| Three grid and tone previews | 12 s |
+| Three grid and tone previews (imagery designs only) | 12 s |
 | Initial rest | 1 s |
 | Two inter-trial rests | 20 s |
 | Final rest | 5 s |
-| **Task from trigger 6** | **314 s (5:14)** |
+| **Visual-perception task from trigger 6** | **302 s (5:02)** |
+| **Imagery-design task from trigger 6** | **314 s (5:14)** |
 
-The five dummy intervals add 5 seconds. A complete fMRI run therefore uses about
-320 triggers and lasts approximately 5:19 from trigger 1 through the final rest.
-Each 2-second position spans two scanner volumes at TR = 1 second.
+The five dummy intervals add 5 seconds. At TR = 1 second, a complete fMRI run
+uses 308 triggers for visual perception or 320 for either imagery design. Each
+2-second position spans two scanner volumes.
 
 For other TR values, the program uses:
 
 ```text
-preview tone gap   = max(1, ceil(2 / TR))
+imagery preview tone gap = max(1, ceil(2 / TR))
 position interval  = max(1, ceil(2 / TR))
 initial rest       = max(1, ceil(1 / TR))
 inter-trial rest   = 10 TRs
@@ -287,14 +299,16 @@ fMRI mode writes:
 
 The frame directory contains one PNG per **raw BOLD volume**. `frame_001.png`
 matches volume 1, and `manifest.csv` has the same `tr_index` as the BOLD volume.
-The first five dummy frames, rests, previews, and blank-bar positions are black.
+The first five dummy frames, rests, imagery previews, and blank-bar positions
+are black.
 In both imagery designs, nonblank imagery frames show the cued sector or bar
 position for the pRF model, even though no mask is displayed to the participant.
 Visible-guide intervals are black in that imagery model. In visual-perception
 runs, nonblank visual frames show the displayed sector or bar; every mask stays
 at full opacity on screen. The manifest and JSON log identify the selected
 design. The trigger, design, and volume CSVs also include `design_mode`. At TR =
-1 second, a complete run is expected to produce 320 frames and 320 trigger rows.
+1 second, an imagery run produces 320 frames and trigger rows; a visual-perception
+run produces 308 of each.
 The final volume interval uses the entered TR because no later trigger marks its
 end; the volume CSV labels this boundary `nominal_last_tr`.
 
