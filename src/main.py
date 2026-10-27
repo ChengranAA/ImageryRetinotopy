@@ -303,6 +303,7 @@ def create_stimuli():
         monitor=mon7t,
         backgroundImage=str(STIMULI_DIRECTORY / "noise_gaussian_1920x1080.png"),
     )
+    window.mouseVisible = False
     log("display_metadata", monitor=MONITOR_NAME, display_screen=display_screen,
         geometry_source="user_supplied_projector_specifications",
         window_size_pix=list(map(int, window.size)), fullscreen=window.fullscr,
@@ -730,6 +731,7 @@ def run_experiment():
     is_fmri = experiment_type == "fMRI"
     if is_fmri:
         event.clearEvents(eventType="keyboard")
+        window.flip()  # Show only the Gaussian background during dummy triggers.
         log(
             "scanner_dummy_trigger_wait_start",
             dummy_trs=SCANNER_DUMMY_TRS,
