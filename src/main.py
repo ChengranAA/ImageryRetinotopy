@@ -15,7 +15,10 @@ Experiment schedule:
 import csv
 import json
 import math
+import os
+import signal
 import socket
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -42,7 +45,7 @@ MONITOR_NAME = "7T_Projector_NOVA"
 PROJECTOR_SIZE_PIX = (1920, 1200)
 PROJECTOR_WIDTH_CM = 30.0
 PROJECTOR_DISTANCE_CM = 99.0
-GRID_DIAMETER_DEG = 10.0
+GRID_DIAMETER_DEG = 8.0
 # Generators draw radius 1 within axes spanning -1.1 to 1.1.
 STIMULUS_CANVAS_TO_GRID_RATIO = 1.1
 GRID_OPACITY_MIN = 1.00
@@ -427,6 +430,41 @@ def start_mock_scanner():
     return True
 
 
+def stop_mock_scanner():
+    global mock_scanner_started
+    if not mock_scanner_started:
+        return
+    try:
+        try:
+            with socket.create_connection(("127.0.0.1", 2333), timeout=0.2) as connection:
+                connection.sendall(b"Stop\n")
+        except OSError:
+            pass  # The scanner may already have finished.
+        # Stop only pauses the scanner. Close the process serving our control port
+        # as well, including its overlay, without affecting other scanner instances.
+        listeners = subprocess.run(
+            ["lsof", "-t", "-a", "-iTCP:2333", "-sTCP:LISTEN"],
+            capture_output=True, text=True, timeout=1,
+        )
+        if listeners.returncode not in (0, 1):
+            raise RuntimeError(listeners.stderr.strip() or "Could not find mock scanner process")
+        for pid in set(listeners.stdout.split()):
+            process = subprocess.run(
+                ["ps", "-p", pid, "-o", "comm="],
+                capture_output=True, text=True, timeout=1,
+            )
+            if Path(process.stdout.strip()).name == "mock_scanner":
+                try:
+                    os.kill(int(pid), signal.SIGTERM)
+                except ProcessLookupError:
+                    pass
+                log("mock_scanner_terminated", pid=int(pid))
+    except (OSError, subprocess.SubprocessError, RuntimeError) as error:
+        log("mock_scanner_stop_failed", error=repr(error))
+    finally:
+        mock_scanner_started = False
+
+
 def wait_for_tr(target=None):
     target = target or tr_count + 1
     while tr_count < target:
@@ -461,13 +499,24 @@ def draw_bullseye():
     bullseye_inner.draw()
 
 
-def rest(seconds, checkpoint=False):
+def rest(seconds, checkpoint=False, next_condition=None):
     global active_grid, active_stimulus
-    active_grid = None
+    active_grid = {
+        "SECTOR": sector_grid,
+        "SECTOR_COUNTERCLOCKWISE": sector_grid,
+        "VERTICAL_BAR": bar_grid,
+        "HORIZONTAL_BAR": horizontal_bar_grid,
+    }.get(next_condition)
     active_stimulus = None
-    draw_bullseye()
-    window.callOnFlip(lambda: log_design_event("rest_start", "rest", {}))
-    window.flip()
+    window.callOnFlip(lambda: log_design_event("rest_start", "rest", {
+        "upcoming_condition": next_condition or "",
+        "grid_visible": active_grid is not None,
+    }))
+    if active_grid is None:
+        draw_bullseye()
+        window.flip()
+    else:
+        draw_scene()
     if checkpoint:
         save_log()
     wait(seconds)
@@ -494,25 +543,23 @@ def run_trial(condition):
             stimulus_ids = [stimulus_ids[index] for index in order]
     elif condition == "VERTICAL_BAR":
         grid = bar_grid
-        # Visit each edge once per cycle; the next cycle returns to position 00.
-        stimuli = [None, *bar_stimuli, None, *bar_stimuli[-2:0:-1], None]
+        # One outside-grid step per turn; start directly at the first visible bar.
+        stimuli = [*bar_stimuli, None, *reversed(bar_stimuli), None]
         angles = None
-        stimulus_ids = ["blank_grid", *bar_ids, "blank_grid", *bar_ids[-2:0:-1], "blank_grid"]
+        stimulus_ids = [*bar_ids, "blank_grid", *reversed(bar_ids), "blank_grid"]
     elif condition == "HORIZONTAL_BAR":
         grid = horizontal_bar_grid
         stimuli = [
-            None,
             *horizontal_bar_stimuli,
             None,
-            *horizontal_bar_stimuli[-2:0:-1],
+            *reversed(horizontal_bar_stimuli),
             None,
         ]
         angles = None
         stimulus_ids = [
-            "blank_grid",
             *horizontal_bar_ids,
             "blank_grid",
-            *horizontal_bar_ids[-2:0:-1],
+            *reversed(horizontal_bar_ids),
             "blank_grid",
         ]
     else:
@@ -774,13 +821,14 @@ def run_experiment():
     trials = ["SECTOR", "VERTICAL_BAR", "HORIZONTAL_BAR", "SECTOR_COUNTERCLOCKWISE"]
     log("trial_schedule", conditions=trials)
     log("experiment_start", timing_source="scanner_trigger" if is_fmri else "system_clock")
-    rest(INITIAL_REST_TRS * tr_seconds)
+    rest(INITIAL_REST_TRS * tr_seconds, next_condition=trials[0])
     for trial_number, condition in enumerate(trials, start=1):
         run_trial(condition)
         if trial_number == len(trials):
             rest(FINAL_REST_TRS * tr_seconds, checkpoint=True)
         else:
-            rest(INTER_TRIAL_REST_TRS * tr_seconds, checkpoint=True)
+            rest(INTER_TRIAL_REST_TRS * tr_seconds, checkpoint=True,
+                 next_condition=trials[trial_number])
 
     close_design_event()
     if is_fmri:
@@ -806,6 +854,7 @@ def main():
             log("experiment_error", error=repr(error))
             raise
         finally:
+            stop_mock_scanner()
             if mock_scanner_trigger_socket is not None:
                 mock_scanner_trigger_socket.close()
             has_window = "window" in globals()
