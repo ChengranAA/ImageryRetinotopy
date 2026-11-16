@@ -112,6 +112,15 @@ the presentation window opens.
 
 ## Participant instructions
 
+An illustrated participant handout is available as
+[Markdown](docs/participant_introduction.md) and a
+[printable PDF](docs/participant_introduction.pdf). It covers fixation, the fixed
+trial order, both sector directions, bar turnarounds, the three run types, tones,
+and rest periods. To export the Markdown with another tool, keep the
+`docs/participant_figures/` folder beside it so the relative image links resolve.
+The teaching figures use the experiment's actual masks and grids, with a
+simplified background; their printed sizes are not calibrated visual angles.
+
 Before the run, tell the participant to:
 
 1. Keep looking at the central green fixation point.
