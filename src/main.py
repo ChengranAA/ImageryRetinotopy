@@ -335,7 +335,7 @@ def create_stimuli():
         grid_opacity_min=GRID_OPACITY_MIN, grid_opacity_max=GRID_OPACITY_MAX,
         grid_opacity_period_seconds=GRID_OPACITY_PERIOD_SECONDS,
         aperture_channel="alpha", imagery_timing_reference="tone_command")
-    bullseye_outer = visual.Circle(window, radius=8, fillColor="black", lineColor=None)
+    bullseye_outer = visual.Circle(window, radius=8, fillColor="white", lineColor=None)
     bullseye_inner = visual.Circle(window, radius=5, fillColor="green", lineColor=None)
     low_tone = sound.Sound(value=440, secs=0.250, stereo=True)
     high_tone = sound.Sound(value=880, secs=0.250, stereo=True)

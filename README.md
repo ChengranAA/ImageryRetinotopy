@@ -319,7 +319,7 @@ A TR that does not divide 2 seconds can therefore lengthen individual samples.
 - fMRI mode: fullscreen on the selected display
 - Practice mode: 1080 × 720 window
 - Background: `stimuli/noise_gaussian_1920x1080.png`
-- Fixation: green center inside a black outer circle
+- Fixation: green center inside a white outer ring
 - Grid opacity: constant 1.0
 
 These geometry values are configuration values, not proof of physical
