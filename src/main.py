@@ -38,7 +38,7 @@ from psychopy import sound, visual
 SCANNER_DUMMY_TRS = 5
 INITIAL_REST_TRS = 5
 INTER_TRIAL_REST_TRS = 10
-FINAL_REST_TRS = 5
+FINAL_REST_TRS = 10
 DEFAULT_TR_SECONDS = 1.0
 DESIGN_MODES = ("Visual guide + imagery", "Pure imagery", "Visual perception")
 MONITOR_NAME = "7T_Projector_NOVA"

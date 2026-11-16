@@ -45,8 +45,8 @@ For a complete TR = 1 second run, choose the mock-scanner volume count that
 matches the design. Open one terminal and start either:
 
 ```sh
-mock_scanner --tr 1 --volumes 398 --trigger 5 --gui  # either imagery design
-mock_scanner --tr 1 --volumes 382 --trigger 5 --gui  # visual perception
+mock_scanner --tr 1 --volumes 403 --trigger 5 --gui  # either imagery design
+mock_scanner --tr 1 --volumes 387 --trigger 5 --gui  # visual perception
 ```
 
 In a second terminal, from this project directory, start:
@@ -144,12 +144,12 @@ The complete order is:
 4. Four trials in the fixed order above. Imagery designs include a four-second grid and tone
    preview before each trial; visual perception starts directly with the first
    position. The first three trials are followed by 10 TRs of fixation and the
-   final trial is followed by 5 TRs of fixation.
+   final trial is followed by 10 TRs of fixation.
 5. Data are checkpointed during each rest.
 6. Final data and PyPRF files are written before the window closes.
 
 There are 5 rest periods: 5 TRs before trial 1, 10 TRs after each of the first three
-trials, and 5 TRs after the final trial.
+trials, and 10 TRs after the final trial.
 
 During the initial and inter-trial rests, fixation and the upcoming trial's grid
 are visible, with no moving mask or tones. The same grid stays visible into the
@@ -250,8 +250,8 @@ physical acoustic onset.
 
 ## Timing at TR = 1 second
 
-Use **398 volumes for either imagery design** (`Visual guide + imagery` or
-`Pure imagery`) and **382 volumes for `Visual perception`** at TR = 1 second,
+Use **403 volumes for either imagery design** (`Visual guide + imagery` or
+`Pure imagery`) and **387 volumes for `Visual perception`** at TR = 1 second,
 including dummy volumes and the final nominal exported volume.
 
 | Component | Either imagery design (TRs) | Visual perception (TRs) |
@@ -264,33 +264,33 @@ including dummy volumes and the final nominal exported volume.
 | Four grid and tone previews | 16 | 0 |
 | Initial fixation rest | 5 | 5 |
 | Three inter-trial fixation rests (10 each) | 30 | 30 |
-| Final fixation rest | 5 | 5 |
+| Final fixation rest | 10 | 10 |
 | Final nominal exported volume | 1 | 1 |
-| **Total triggers / exported frames** | **398** | **382** |
+| **Total triggers / exported frames** | **403** | **387** |
 
 The beginning is **5 dummy TRs + 5 fixation-rest TRs**: dummy scans occupy
 TRs 1–5, initial fixation occupies TRs 6–10, and the first trial starts at
-trigger 11. Total fixation rest is **40 TRs** (5 + 10 + 10 + 10 + 5).
+trigger 11. Total fixation rest is **45 TRs** (5 + 10 + 10 + 10 + 10).
 Blank positions within bar trials are included in the trial counts above.
 Each position, including a blank bar position, spans two TRs.
 
-From trigger 6 to task completion, imagery designs last **392 seconds (6:32)**
-and visual perception lasts **376 seconds (6:16)**. The task-ending trigger
+From trigger 6 to task completion, imagery designs last **397 seconds (6:37)**
+and visual perception lasts **381 seconds (6:21)**. The task-ending trigger
 is retained as one final nominal volume by the exporter; it is separate from
-the five-TR final rest. Thus the exported totals are **5 + 392 + 1 = 398**
-and **5 + 376 + 1 = 382**, respectively. These counts assume exact one-second
+the ten-TR final rest. Thus the exported totals are **5 + 397 + 1 = 403**
+and **5 + 381 + 1 = 387**, respectively. These counts assume exact one-second
 triggers; check the saved trigger table and manifest for each acquired run.
 
 The final rest is already included in these totals:
 
 | Design | Final fixation-rest TRs | Task-ending trigger |
 |---|---|---:|
-| Either imagery design | 393–397 (5 TRs) | 398 |
-| Visual perception | 377–381 (5 TRs) | 382 |
+| Either imagery design | 393–402 (10 TRs) | 403 |
+| Visual perception | 377–386 (10 TRs) | 387 |
 
 The earlier 386-TR imagery total predates the corrected bar sweeps. Restoring
 all visible bar positions added 12 TRs across the two bar trials. Start the mock
-scanner with `--volumes 398` for the current imagery designs. If it stops at
+scanner with `--volumes 403` for the current imagery designs. If it stops at
 386, the experiment is still in the final sector trial and waits for more
 triggers; it cannot finish that trial or the final rest.
 
@@ -301,7 +301,7 @@ imagery preview tone gap = max(1, ceil(2 / TR))
 position interval  = max(1, ceil(2 / TR))
 initial rest       = 5 TRs
 inter-trial rest   = 10 TRs
-final rest         = 5 TRs
+final rest         = 10 TRs
 ```
 
 A TR that does not divide 2 seconds can therefore lengthen individual samples.
@@ -382,8 +382,8 @@ Visible-guide intervals are black in that imagery model. In visual-perception
 runs, nonblank visual frames show the displayed sector or bar; every mask stays
 at full opacity on screen. The manifest and JSON log identify the selected
 design. The trigger, design, and volume CSVs also include `design_mode`. At TR =
-1 second, an imagery run produces 398 frames and trigger rows; a visual-perception
-run produces 382 of each.
+1 second, an imagery run produces 403 frames and trigger rows; a visual-perception
+run produces 387 of each.
 The final volume interval uses the entered TR because no later trigger marks its
 end; the volume CSV labels this boundary `nominal_last_tr`.
 
