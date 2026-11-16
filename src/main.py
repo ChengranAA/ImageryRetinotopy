@@ -6,7 +6,7 @@ Author: Chengran Li
 
 Experiment schedule:
 - Wait for scanner dummy volumes (fMRI runs only)
-- Show one rotating-sector, one vertical-bar, and one horizontal-bar trial in random order
+- Show clockwise sector, vertical bar, horizontal bar, then counterclockwise sector
 - Preview each trial with its grid and two low tones
 - Show one visible sequence followed by two imagery sequences, present three
   imagery sequences without a visible mask, or show three visible sequences
@@ -15,7 +15,6 @@ Experiment schedule:
 import csv
 import json
 import math
-import random
 import socket
 import sys
 import time
@@ -34,6 +33,7 @@ from psychopy import sound, visual
 
 ## Experiment settings
 SCANNER_DUMMY_TRS = 5
+INITIAL_REST_TRS = 5
 INTER_TRIAL_REST_TRS = 10
 FINAL_REST_TRS = 5
 DEFAULT_TR_SECONDS = 1.0
@@ -42,6 +42,9 @@ MONITOR_NAME = "7T_Projector_NOVA"
 PROJECTOR_SIZE_PIX = (1920, 1200)
 PROJECTOR_WIDTH_CM = 30.0
 PROJECTOR_DISTANCE_CM = 99.0
+GRID_DIAMETER_DEG = 10.0
+# Generators draw radius 1 within axes spanning -1.1 to 1.1.
+STIMULUS_CANVAS_TO_GRID_RATIO = 1.1
 GRID_OPACITY_MIN = 1.00
 GRID_OPACITY_MAX = 1.00
 GRID_OPACITY_PERIOD_SECONDS = 24.0
@@ -114,7 +117,7 @@ def draw_scene():
 def aperture_path(condition, stimulus_id, blank_grid):
     if blank_grid:
         return ""
-    if condition == "SECTOR":
+    if condition in {"SECTOR", "SECTOR_COUNTERCLOCKWISE"}:
         directory = "sectors_pilot"
     elif condition == "VERTICAL_BAR":
         directory = "vertical_bars"
@@ -301,16 +304,31 @@ def create_stimuli():
         screen=display_screen,
         units="pix",
         monitor=mon7t,
+        infoMsg="",  # Hide PsychoPy's frame-rate measurement message at startup.
         backgroundImage=str(STIMULI_DIRECTORY / "noise_gaussian_1920x1080.png"),
     )
     window.mouseVisible = False
+    pixels_per_cm = PROJECTOR_SIZE_PIX[0] / PROJECTOR_WIDTH_CM
+    grid_diameter_pix = (
+        2 * PROJECTOR_DISTANCE_CM * math.tan(math.radians(GRID_DIAMETER_DEG / 2))
+        * pixels_per_cm
+    )
+    if experiment_type == "Practice":
+        grid_diameter_pix = min(grid_diameter_pix, 0.9 * min(window.size))
+    stimulus_size = (grid_diameter_pix * STIMULUS_CANVAS_TO_GRID_RATIO,) * 2
+    grid_diameter_deg = math.degrees(2 * math.atan(
+        grid_diameter_pix / pixels_per_cm / (2 * PROJECTOR_DISTANCE_CM)
+    ))
     log("display_metadata", monitor=MONITOR_NAME, display_screen=display_screen,
         geometry_source="user_supplied_projector_specifications",
         window_size_pix=list(map(int, window.size)), fullscreen=window.fullscr,
         screen_width_cm=window.monitor.getWidth(),
         viewing_distance_cm=window.monitor.getDistance(),
         monitor_size_pix=window.monitor.getSizePix(),
-        calibration_verified=False, stimulus_size_pix=[500, 500],
+        calibration_verified=False, stimulus_size_pix=list(stimulus_size),
+        requested_grid_diameter_deg=GRID_DIAMETER_DEG,
+        grid_diameter_pix=grid_diameter_pix, grid_diameter_deg=grid_diameter_deg,
+        stimulus_canvas_to_grid_ratio=STIMULUS_CANVAS_TO_GRID_RATIO,
         grid_opacity_min=GRID_OPACITY_MIN, grid_opacity_max=GRID_OPACITY_MAX,
         grid_opacity_period_seconds=GRID_OPACITY_PERIOD_SECONDS,
         aperture_channel="alpha", imagery_timing_reference="tone_command")
@@ -322,25 +340,30 @@ def create_stimuli():
     sector_ids = [f"sector_{(2 - offset) % 12:02d}" for offset in range(12)]
     sector_angles = [((2 - offset) * 30.0 + 30.0) % 360 for offset in range(12)]
     sector_stimuli = [
-        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "sectors_pilot" / f"{name}.png"))
+        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "sectors_pilot" / f"{name}.png"),
+                         size=stimulus_size)
         for name in sector_ids
     ]
-    sector_grid = visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "sector_grid_pilot.png"))
+    sector_grid = visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "sector_grid_pilot.png"),
+                                   size=stimulus_size)
 
     bar_ids = [f"vertical_bar_{index:02d}" for index in range(7)]
     bar_stimuli = [
-        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "vertical_bars" / f"{name}.png"))
+        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "vertical_bars" / f"{name}.png"),
+                         size=stimulus_size)
         for name in bar_ids
     ]
-    bar_grid = visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "vertical_bar_grid.png"))
+    bar_grid = visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "vertical_bar_grid.png"),
+                                size=stimulus_size)
 
     horizontal_bar_ids = [f"horizontal_bar_{index:02d}" for index in range(7)]
     horizontal_bar_stimuli = [
-        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "horizontal_bars" / f"{name}.png"))
+        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "horizontal_bars" / f"{name}.png"),
+                         size=stimulus_size)
         for name in horizontal_bar_ids
     ]
     horizontal_bar_grid = visual.ImageStim(
-        window, image=str(STIMULI_DIRECTORY / "horizontal_bar_grid.png")
+        window, image=str(STIMULI_DIRECTORY / "horizontal_bar_grid.png"), size=stimulus_size
     )
 
 
@@ -461,20 +484,27 @@ def tone_for(angle=None, blank_grid=False, middle_bar=False):
 def run_trial(condition):
     global active_grid, active_stimulus, active_stimulus_opacity
 
-    if condition == "SECTOR":
+    if condition in {"SECTOR", "SECTOR_COUNTERCLOCKWISE"}:
         grid, stimuli, angles, stimulus_ids = sector_grid, sector_stimuli, sector_angles, sector_ids
+        if condition == "SECTOR_COUNTERCLOCKWISE":
+            # Keep the top position first, then traverse the same masks in reverse.
+            order = [0, *range(len(stimuli) - 1, 0, -1)]
+            stimuli = [stimuli[index] for index in order]
+            angles = [angles[index] for index in order]
+            stimulus_ids = [stimulus_ids[index] for index in order]
     elif condition == "VERTICAL_BAR":
         grid = bar_grid
-        stimuli = [None, *bar_stimuli, None, *reversed(bar_stimuli), None]
+        # Visit each edge once per cycle; the next cycle returns to position 00.
+        stimuli = [None, *bar_stimuli, None, *bar_stimuli[-2:0:-1], None]
         angles = None
-        stimulus_ids = ["blank_grid", *bar_ids, "blank_grid", *reversed(bar_ids), "blank_grid"]
+        stimulus_ids = ["blank_grid", *bar_ids, "blank_grid", *bar_ids[-2:0:-1], "blank_grid"]
     elif condition == "HORIZONTAL_BAR":
         grid = horizontal_bar_grid
         stimuli = [
             None,
             *horizontal_bar_stimuli,
             None,
-            *reversed(horizontal_bar_stimuli),
+            *horizontal_bar_stimuli[-2:0:-1],
             None,
         ]
         angles = None
@@ -482,7 +512,7 @@ def run_trial(condition):
             "blank_grid",
             *horizontal_bar_ids,
             "blank_grid",
-            *reversed(horizontal_bar_ids),
+            *horizontal_bar_ids[-2:0:-1],
             "blank_grid",
         ]
     else:
@@ -741,11 +771,10 @@ def run_experiment():
         wait_for_tr(SCANNER_DUMMY_TRS + 1)
         log("scanner_run_start", tr_index=tr_count)
 
-    trials = ["SECTOR", "VERTICAL_BAR", "HORIZONTAL_BAR"]
-    random.shuffle(trials)
+    trials = ["SECTOR", "VERTICAL_BAR", "HORIZONTAL_BAR", "SECTOR_COUNTERCLOCKWISE"]
     log("trial_schedule", conditions=trials)
     log("experiment_start", timing_source="scanner_trigger" if is_fmri else "system_clock")
-    rest(1)
+    rest(INITIAL_REST_TRS * tr_seconds)
     for trial_number, condition in enumerate(trials, start=1):
         run_trial(condition)
         if trial_number == len(trials):

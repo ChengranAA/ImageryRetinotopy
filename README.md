@@ -45,8 +45,8 @@ For a complete TR = 1 second run, choose the mock-scanner volume count that
 matches the design. Open one terminal and start either:
 
 ```sh
-mock_scanner --tr 1 --volumes 320 --trigger 5 --gui  # either imagery design
-mock_scanner --tr 1 --volumes 308 --trigger 5 --gui  # visual perception
+mock_scanner --tr 1 --volumes 386 --trigger 5 --gui  # either imagery design
+mock_scanner --tr 1 --volumes 370 --trigger 5 --gui  # visual perception
 ```
 
 In a second terminal, from this project directory, start:
@@ -80,6 +80,10 @@ uv run python src/main.py
 The program accepts the keyboard character `5` as the physical scanner trigger.
 It discards the first five triggers as dummy volumes and starts the task at
 trigger 6. Trigger 6 is time zero in the task-relative output columns.
+TRs 6–10 show fixation before the first trial starts at trigger 11. Thus the
+beginning contains five dummy volumes followed by five fixation-rest volumes.
+PsychoPy still measures the display frame rate during window setup, with its
+measurement text hidden.
 
 If triggers stop, the current display remains visible until another trigger is
 received or Escape is pressed.
@@ -119,38 +123,50 @@ so the operator must give these instructions verbally.
 
 ## Run structure
 
-Every run contains one `SECTOR`, one `VERTICAL_BAR`, and one `HORIZONTAL_BAR`
-trial. Their order is randomized once and saved as `trial_schedule` in the JSON
-log.
+Every run contains one clockwise `SECTOR`, one `VERTICAL_BAR`, one
+`HORIZONTAL_BAR`, and one `SECTOR_COUNTERCLOCKWISE` trial, always in that fixed order.
+The order is saved as `trial_schedule` in the JSON log. The original `SECTOR` condition
+name continues to identify clockwise rotation in all outputs.
 
 The complete order is:
 
 1. Five dummy scanner volumes in fMRI mode.
 2. Trigger 6 starts the task.
-3. Initial fixation rest.
-4. Three randomized trials. Imagery designs include a four-second grid and tone
+3. Five TRs of initial fixation rest (TRs 6–10); trial 1 begins at trigger 11.
+4. Four trials in the fixed order above. Imagery designs include a four-second grid and tone
    preview before each trial; visual perception starts directly with the first
-   position. The first two trials are followed by 10 TRs of fixation and the
+   position. The first three trials are followed by 10 TRs of fixation and the
    final trial is followed by 5 TRs of fixation.
 5. Data are checkpointed during each rest.
 6. Final data and PyPRF files are written before the window closes.
 
-There are 4 rest periods: 1 TR before trial 1, 10 TRs after each of the first two
+There are 5 rest periods: 5 TRs before trial 1, 10 TRs after each of the first three
 trials, and 5 TRs after the final trial.
 
-### Sector trial
+### Sector trials
 
-The sector sequence covers 12 clockwise 60-degree wedge positions, starting at
-the top:
+Each sector trial covers 12 positions of a 60-degree wedge, starting at the top.
+The clockwise trial (`SECTOR`) uses:
 
 ```text
 90, 60, 30, 0, 330, 300, 270, 240, 210, 180, 150, 120 degrees
 ```
 
+The counterclockwise trial (`SECTOR_COUNTERCLOCKWISE`) uses:
+
+```text
+90, 120, 150, 180, 210, 240, 270, 300, 330, 0, 30, 60 degrees
+```
+
 Each position lasts 2 seconds. Visual-guide runs show the wedge sequence once,
 then cue two imagery repetitions. Pure-imagery runs cue three repetitions without
 showing wedges. Visual-perception runs show the wedge sequence three times at
-full opacity. The sector grid remains visible during all three designs.
+full opacity. The sector grid remains visible during all three designs. The
+timings below apply to each sector trial.
+
+In pure imagery, the shared sector grid and cardinal-position tones do not
+identify rotation direction. This change adds no direction cue; participants
+need a way to know which direction to imagine before using that design.
 
 - Visual-guide sequence: 24 seconds visible + 48 seconds imagery
 - Pure-imagery sequence: 72 seconds imagery
@@ -165,20 +181,22 @@ The vertical-bar sequence moves left to right and then right to left:
 ```text
 blank, 00, 01, 02, 03, 04, 05, 06,
 blank,
-06, 05, 04, 03, 02, 01, 00, blank
+05, 04, 03, 02, 01, blank
 ```
 
+Each edge (`00` and `06`) appears once per cycle. The return sweep skips both
+edges, and the next repetition starts again at `00`. The blank intervals remain.
 Each position lasts 2 seconds. `vertical_bar_03` is the central bar.
 The vertical-bar grid remains visible. Visual-guide runs show the bar sequence
 once and cue two imagery repetitions; pure-imagery runs cue three repetitions
 without showing bars. Visual-perception runs show three visible repetitions at
 full opacity for every nonblank bar position.
 
-- Visual-guide sequence: 34 seconds visible + 68 seconds imagery
-- Pure-imagery sequence: 102 seconds imagery
-- Visual-perception sequence: 102 seconds visible
-- Imagery preview: 4 seconds; imagery-design trial: 106 seconds
-- Visual-perception trial: 102 seconds, without a preview
+- Visual-guide sequence: 30 seconds visible + 60 seconds imagery
+- Pure-imagery sequence: 90 seconds imagery
+- Visual-perception sequence: 90 seconds visible
+- Imagery preview: 4 seconds; imagery-design trial: 94 seconds
+- Visual-perception trial: 90 seconds, without a preview
 
 ### Horizontal-bar trial
 
@@ -188,18 +206,18 @@ uses the same sequence structure as the vertical-bar trial:
 ```text
 blank, 00, 01, 02, 03, 04, 05, 06,
 blank,
-06, 05, 04, 03, 02, 01, 00, blank
+05, 04, 03, 02, 01, blank
 ```
 
 Each imagined position lasts 2 seconds. `horizontal_bar_03` is the central bar.
 The horizontal-bar grid remains visible. The sequence timing and repetitions
 match the vertical-bar trial.
 
-- Visual-guide sequence: 34 seconds visible + 68 seconds imagery
-- Pure-imagery sequence: 102 seconds imagery
-- Visual-perception sequence: 102 seconds visible
-- Imagery preview: 4 seconds; imagery-design trial: 106 seconds
-- Visual-perception trial: 102 seconds, without a preview
+- Visual-guide sequence: 30 seconds visible + 60 seconds imagery
+- Pure-imagery sequence: 90 seconds imagery
+- Visual-perception sequence: 90 seconds visible
+- Imagery preview: 4 seconds; imagery-design trial: 94 seconds
+- Visual-perception trial: 90 seconds, without a preview
 
 ## Tones
 
@@ -220,17 +238,17 @@ physical acoustic onset.
 
 | Component | Total |
 |---|---:|
-| One sector sequence | 72 s |
-| Two bar sequences | 204 s |
-| Three grid and tone previews (imagery designs only) | 12 s |
-| Initial rest | 1 s |
-| Two inter-trial rests | 20 s |
+| Two sector sequences | 144 s |
+| Two bar sequences | 180 s |
+| Four grid and tone previews (imagery designs only) | 16 s |
+| Initial rest | 5 s |
+| Three inter-trial rests | 30 s |
 | Final rest | 5 s |
-| **Visual-perception task from trigger 6** | **302 s (5:02)** |
-| **Imagery-design task from trigger 6** | **314 s (5:14)** |
+| **Visual-perception task from trigger 6** | **364 s (6:04)** |
+| **Imagery-design task from trigger 6** | **380 s (6:20)** |
 
 The five dummy intervals add 5 seconds. At TR = 1 second, a complete fMRI run
-uses 308 triggers for visual perception or 320 for either imagery design. Each
+uses 370 triggers for visual perception or 386 for either imagery design. Each
 2-second position spans two scanner volumes.
 
 For other TR values, the program uses:
@@ -238,7 +256,7 @@ For other TR values, the program uses:
 ```text
 imagery preview tone gap = max(1, ceil(2 / TR))
 position interval  = max(1, ceil(2 / TR))
-initial rest       = max(1, ceil(1 / TR))
+initial rest       = 5 TRs
 inter-trial rest   = 10 TRs
 final rest         = 5 TRs
 ```
@@ -251,7 +269,9 @@ A TR that does not divide 2 seconds can therefore lengthen individual samples.
 - Expected projector resolution: 1920 × 1200 pixels
 - Projected width: 30 cm
 - Viewing distance: 99 cm
-- Stimulus images: 500 × 500 pixels
+- Grid diameter: 10° visual angle in fMRI mode (5° radius)
+- Displayed grid diameter: approximately 1,109 pixels with the configured geometry
+- Source images and model frames: 500 × 500 pixels, scaled together for presentation
 - fMRI mode: fullscreen on the selected display
 - Practice mode: 1080 × 720 window
 - Background: `stimuli/noise_gaussian_1920x1080.png`
@@ -260,6 +280,18 @@ A TR that does not divide 2 seconds can therefore lengthen individual samples.
 
 These geometry values are configuration values, not proof of physical
 calibration. Confirm them on the actual projector before data collection.
+
+The source images include transparent margins: their full canvas is 1.1 times
+the grid diameter. All grids and masks therefore display at approximately
+1,220 × 1,220 pixels to give the circular grid its 10° diameter. Practice mode
+reduces the grid to fit within 90% of the window's smaller dimension; it is a
+size preview rather than a calibrated 10° presentation. The JSON display metadata
+records the requested angle, displayed pixel size, and angle calculated from
+the configured monitor geometry.
+
+Model PNGs retain their original resolution and padding. For pRF fitting, the
+grid boundary corresponds to 5° eccentricity; the full model-frame width spans
+approximately 10.99° including padding.
 
 ## Stimulus generators
 
@@ -307,8 +339,8 @@ Visible-guide intervals are black in that imagery model. In visual-perception
 runs, nonblank visual frames show the displayed sector or bar; every mask stays
 at full opacity on screen. The manifest and JSON log identify the selected
 design. The trigger, design, and volume CSVs also include `design_mode`. At TR =
-1 second, an imagery run produces 320 frames and trigger rows; a visual-perception
-run produces 308 of each.
+1 second, an imagery run produces 386 frames and trigger rows; a visual-perception
+run produces 370 of each.
 The final volume interval uses the entered TR because no later trigger marks its
 end; the volume CSV labels this boundary `nominal_last_tr`.
 
@@ -337,7 +369,7 @@ Complete this checklist in the scanner room:
 ## Verification status
 
 An earlier design completed a mock-scanner run and checkpoint-timing test. The
-three selectable designs and their full-volume model exports still require a
+four-trial schedules in all three designs and their full-volume model exports require a
 complete mock-scanner run each, followed by checks against the saved timing
 tables and BOLD acquisition metadata.
 
