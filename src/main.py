@@ -36,7 +36,7 @@ from psychopy import sound, visual
 
 ## Experiment settings
 SCANNER_DUMMY_TRS = 5
-INITIAL_REST_TRS = 5
+INITIAL_REST_TRS = 10
 INTER_TRIAL_REST_TRS = 10
 FINAL_REST_TRS = 10
 DEFAULT_TR_SECONDS = 1.0
@@ -860,9 +860,11 @@ def main():
             has_window = "window" in globals()
             if has_window:
                 window.clearBuffer()
+                if "bullseye_inner" in globals():
+                    draw_bullseye()
                 window.callOnFlip(close_design_event)
                 window.flip()
-                log("display_cleared")
+                log("display_cleared", fixation_visible="bullseye_inner" in globals())
             try:
                 save_log()
             finally:
