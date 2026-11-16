@@ -1,20 +1,20 @@
 """
 =======================================================
-Title: Mental imagery retinotopy experiment
+Title: Imagery and visual perception retinotopy experiment
 Author: Chengran Li
 =======================================================
 
 Experiment schedule:
 - Wait for scanner dummy volumes (fMRI runs only)
-- Show one rotating-sector, one vertical-bar, and one horizontal-bar trial in random order
-- Show each aperture sequence once
-- Repeat the same sequence twice using tones for imagery
+- Show clockwise sector, vertical bar, horizontal bar, then counterclockwise sector
+- Preview each trial with its grid and two low tones
+- Show one visible sequence followed by two imagery sequences, present three
+  imagery sequences without a visible mask, or show three visible sequences
 """
 
 import csv
 import json
 import math
-import random
 import socket
 import sys
 import time
@@ -33,11 +33,18 @@ from psychopy import sound, visual
 
 ## Experiment settings
 SCANNER_DUMMY_TRS = 5
+INITIAL_REST_TRS = 5
+INTER_TRIAL_REST_TRS = 10
+FINAL_REST_TRS = 5
 DEFAULT_TR_SECONDS = 1.0
+DESIGN_MODES = ("Visual guide + imagery", "Pure imagery", "Visual perception")
 MONITOR_NAME = "7T_Projector_NOVA"
 PROJECTOR_SIZE_PIX = (1920, 1200)
 PROJECTOR_WIDTH_CM = 30.0
 PROJECTOR_DISTANCE_CM = 99.0
+GRID_DIAMETER_DEG = 10.0
+# Generators draw radius 1 within axes spanning -1.1 to 1.1.
+STIMULUS_CANVAS_TO_GRID_RATIO = 1.1
 GRID_OPACITY_MIN = 1.00
 GRID_OPACITY_MAX = 1.00
 GRID_OPACITY_PERIOD_SECONDS = 24.0
@@ -52,6 +59,7 @@ trigger_times = []
 design_events = []
 subject_id = "unknown"
 experiment_type = "Practice"
+design_mode = DESIGN_MODES[0]
 run_number = None
 display_screen = 0
 tr_seconds = DEFAULT_TR_SECONDS
@@ -109,7 +117,7 @@ def draw_scene():
 def aperture_path(condition, stimulus_id, blank_grid):
     if blank_grid:
         return ""
-    if condition == "SECTOR":
+    if condition in {"SECTOR", "SECTOR_COUNTERCLOCKWISE"}:
         directory = "sectors_pilot"
     elif condition == "VERTICAL_BAR":
         directory = "vertical_bars"
@@ -136,8 +144,9 @@ def sample_for_volume(volume_onset, volume_offset):
 
 
 def pyprf_frame(sample, mask_cache, frame_size):
-    """Create the binary spatial-stimulation frame expected by PyPRF."""
-    if sample is None or sample["phase"] != "visual" or sample["blank_grid"]:
+    """Encode the cued imagery or visible position for the analyzePRF model."""
+    model_phase = "visual" if design_mode == "Visual perception" else "imagery"
+    if sample is None or sample["phase"] != model_phase or sample["blank_grid"]:
         return Image.new("L", frame_size, 0)
 
     mask_path = PROJECT_ROOT / aperture_path(
@@ -151,22 +160,27 @@ def pyprf_frame(sample, mask_cache, frame_size):
 
 
 def save_pyprf_frames(run_label, timestamp):
-    """Save one PyPRF-compatible stimulus-location PNG per retained volume."""
+    """Save one model frame per raw BOLD volume, including dummy volumes."""
     global pyprf_frame_count
 
-    task_triggers = trigger_times[SCANNER_DUMMY_TRS:]
+    if len(trigger_times) <= SCANNER_DUMMY_TRS:
+        return
+    task_start = trigger_times[SCANNER_DUMMY_TRS]
     run_end = next(
         (record["time"] for record in reversed(events)
          if record["event"] in {"display_cleared", "experiment_end"}),
         None,
     )
     volume_intervals = []
-    for index, onset in enumerate(task_triggers):
-        following = task_triggers[index + 1] if index + 1 < len(task_triggers) else None
-        offset = following if following is not None else run_end
-        if offset is None or offset <= onset:
+    for index, onset in enumerate(trigger_times):
+        following = trigger_times[index + 1] if index + 1 < len(trigger_times) else None
+        if following is None and run_end is None:
             break
-        sample, overlap = sample_for_volume(onset, offset)
+        offset = following if following is not None else onset + tr_seconds
+        sample, overlap = (
+            (None, 0.0) if index < SCANNER_DUMMY_TRS
+            else sample_for_volume(onset, offset)
+        )
         volume_intervals.append((onset, offset, sample, overlap))
 
     if not volume_intervals:
@@ -190,18 +204,20 @@ def save_pyprf_frames(run_label, timestamp):
             "frame", "tr_index", "trigger_time_seconds", "seconds_from_task_start",
             "volume_duration_seconds", "phase", "condition", "stimulus_id",
             "blank_grid", "aperture_path", "trial_number", "opacity",
-            "dominant_overlap_seconds",
+            "dominant_overlap_seconds", "design_mode",
         ])
         writer.writeheader()
-        task_start = task_triggers[0]
         for index, (onset, offset, sample, overlap) in enumerate(volume_intervals, start=1):
             writer.writerow({
                 "frame": f"frame_{index:03d}.png",
-                "tr_index": SCANNER_DUMMY_TRS + index,
+                "tr_index": index,
                 "trigger_time_seconds": f"{onset:.6f}",
                 "seconds_from_task_start": f"{onset - task_start:.6f}",
                 "volume_duration_seconds": f"{offset - onset:.6f}",
-                "phase": "" if sample is None else sample["phase"],
+                "phase": (
+                    "dummy" if index <= SCANNER_DUMMY_TRS
+                    else "" if sample is None else sample["phase"]
+                ),
                 "condition": "" if sample is None else sample["condition"],
                 "stimulus_id": "" if sample is None else sample["stimulus_id"],
                 "blank_grid": True if sample is None else sample["blank_grid"],
@@ -211,12 +227,13 @@ def save_pyprf_frames(run_label, timestamp):
                 "trial_number": "" if sample is None else sample["trial_number"],
                 "opacity": "" if sample is None else sample["opacity"],
                 "dominant_overlap_seconds": f"{overlap:.6f}",
+                "design_mode": design_mode,
             })
 
 
 ## Experiment information window
 def show_dialogs():
-    global subject_id, experiment_type, run_number, tr_seconds, display_screen
+    global subject_id, experiment_type, design_mode, run_number, tr_seconds, display_screen
 
     outputs = list(dict.fromkeys(device["name"] for device in sounddevice.query_devices()
                                  if device["max_output_channels"] >= 2))
@@ -230,6 +247,7 @@ def show_dialogs():
     dialog = gui.Dlg(title="Imagery Retinotopy", alwaysOnTop=True)
     dialog.addField("Subject ID:")
     dialog.addField("Run type", choices=["Practice", "fMRI"])
+    dialog.addField("Design", choices=DESIGN_MODES)
     dialog.addField("TR (seconds; fMRI only)", initial=DEFAULT_TR_SECONDS)
     dialog.addField("Run number (fMRI only)", initial=1)
     dialog.addField("Presentation display index (0=primary)", initial=0)
@@ -238,20 +256,21 @@ def show_dialogs():
     if not dialog.OK:
         return False
 
-    prefs.hardware["audioDevice"] = [data[5]]
-    display_screen = int(data[4])
+    prefs.hardware["audioDevice"] = [data[6]]
+    display_screen = int(data[5])
     if display_screen < 0:
         raise ValueError("Presentation display index must be nonnegative")
     subject_id = data[0] or "unknown"
     experiment_type = data[1]
+    design_mode = data[2]
     if experiment_type == "fMRI":
         try:
-            tr_seconds = float(data[2])
+            tr_seconds = float(data[3])
             if not math.isfinite(tr_seconds) or tr_seconds <= 0:
                 raise ValueError
         except (TypeError, ValueError):
             tr_seconds = DEFAULT_TR_SECONDS
-        run_number = int(data[3])
+        run_number = int(data[4])
         if run_number < 1:
             raise ValueError("Run number must be a positive integer")
 
@@ -259,9 +278,10 @@ def show_dialogs():
         "dialog_complete",
         subject_id=subject_id,
         experiment_type=experiment_type,
+        design_mode=design_mode,
         run_number=run_number,
         display_screen=display_screen,
-        audio_device=data[5],
+        audio_device=data[6],
         tr_seconds=tr_seconds if experiment_type == "fMRI" else None,
     )
     return True
@@ -284,15 +304,31 @@ def create_stimuli():
         screen=display_screen,
         units="pix",
         monitor=mon7t,
+        infoMsg="",  # Hide PsychoPy's frame-rate measurement message at startup.
         backgroundImage=str(STIMULI_DIRECTORY / "noise_gaussian_1920x1080.png"),
     )
+    window.mouseVisible = False
+    pixels_per_cm = PROJECTOR_SIZE_PIX[0] / PROJECTOR_WIDTH_CM
+    grid_diameter_pix = (
+        2 * PROJECTOR_DISTANCE_CM * math.tan(math.radians(GRID_DIAMETER_DEG / 2))
+        * pixels_per_cm
+    )
+    if experiment_type == "Practice":
+        grid_diameter_pix = min(grid_diameter_pix, 0.9 * min(window.size))
+    stimulus_size = (grid_diameter_pix * STIMULUS_CANVAS_TO_GRID_RATIO,) * 2
+    grid_diameter_deg = math.degrees(2 * math.atan(
+        grid_diameter_pix / pixels_per_cm / (2 * PROJECTOR_DISTANCE_CM)
+    ))
     log("display_metadata", monitor=MONITOR_NAME, display_screen=display_screen,
         geometry_source="user_supplied_projector_specifications",
         window_size_pix=list(map(int, window.size)), fullscreen=window.fullscr,
         screen_width_cm=window.monitor.getWidth(),
         viewing_distance_cm=window.monitor.getDistance(),
         monitor_size_pix=window.monitor.getSizePix(),
-        calibration_verified=False, stimulus_size_pix=[500, 500],
+        calibration_verified=False, stimulus_size_pix=list(stimulus_size),
+        requested_grid_diameter_deg=GRID_DIAMETER_DEG,
+        grid_diameter_pix=grid_diameter_pix, grid_diameter_deg=grid_diameter_deg,
+        stimulus_canvas_to_grid_ratio=STIMULUS_CANVAS_TO_GRID_RATIO,
         grid_opacity_min=GRID_OPACITY_MIN, grid_opacity_max=GRID_OPACITY_MAX,
         grid_opacity_period_seconds=GRID_OPACITY_PERIOD_SECONDS,
         aperture_channel="alpha", imagery_timing_reference="tone_command")
@@ -304,25 +340,30 @@ def create_stimuli():
     sector_ids = [f"sector_{(2 - offset) % 12:02d}" for offset in range(12)]
     sector_angles = [((2 - offset) * 30.0 + 30.0) % 360 for offset in range(12)]
     sector_stimuli = [
-        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "sectors_pilot" / f"{name}.png"))
+        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "sectors_pilot" / f"{name}.png"),
+                         size=stimulus_size)
         for name in sector_ids
     ]
-    sector_grid = visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "sector_grid_pilot.png"))
+    sector_grid = visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "sector_grid_pilot.png"),
+                                   size=stimulus_size)
 
     bar_ids = [f"vertical_bar_{index:02d}" for index in range(7)]
     bar_stimuli = [
-        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "vertical_bars" / f"{name}.png"))
+        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "vertical_bars" / f"{name}.png"),
+                         size=stimulus_size)
         for name in bar_ids
     ]
-    bar_grid = visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "vertical_bar_grid.png"))
+    bar_grid = visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "vertical_bar_grid.png"),
+                                size=stimulus_size)
 
     horizontal_bar_ids = [f"horizontal_bar_{index:02d}" for index in range(7)]
     horizontal_bar_stimuli = [
-        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "horizontal_bars" / f"{name}.png"))
+        visual.ImageStim(window, image=str(STIMULI_DIRECTORY / "horizontal_bars" / f"{name}.png"),
+                         size=stimulus_size)
         for name in horizontal_bar_ids
     ]
     horizontal_bar_grid = visual.ImageStim(
-        window, image=str(STIMULI_DIRECTORY / "horizontal_bar_grid.png")
+        window, image=str(STIMULI_DIRECTORY / "horizontal_bar_grid.png"), size=stimulus_size
     )
 
 
@@ -439,24 +480,31 @@ def tone_for(angle=None, blank_grid=False, middle_bar=False):
     return low_tone
 
 
-## Visual presentation and imagery
+## Imagery trials
 def run_trial(condition):
     global active_grid, active_stimulus, active_stimulus_opacity
 
-    if condition == "SECTOR":
+    if condition in {"SECTOR", "SECTOR_COUNTERCLOCKWISE"}:
         grid, stimuli, angles, stimulus_ids = sector_grid, sector_stimuli, sector_angles, sector_ids
+        if condition == "SECTOR_COUNTERCLOCKWISE":
+            # Keep the top position first, then traverse the same masks in reverse.
+            order = [0, *range(len(stimuli) - 1, 0, -1)]
+            stimuli = [stimuli[index] for index in order]
+            angles = [angles[index] for index in order]
+            stimulus_ids = [stimulus_ids[index] for index in order]
     elif condition == "VERTICAL_BAR":
         grid = bar_grid
-        stimuli = [None, *bar_stimuli, None, *reversed(bar_stimuli), None]
+        # Visit each edge once per cycle; the next cycle returns to position 00.
+        stimuli = [None, *bar_stimuli, None, *bar_stimuli[-2:0:-1], None]
         angles = None
-        stimulus_ids = ["blank_grid", *bar_ids, "blank_grid", *reversed(bar_ids), "blank_grid"]
+        stimulus_ids = ["blank_grid", *bar_ids, "blank_grid", *bar_ids[-2:0:-1], "blank_grid"]
     elif condition == "HORIZONTAL_BAR":
         grid = horizontal_bar_grid
         stimuli = [
             None,
             *horizontal_bar_stimuli,
             None,
-            *reversed(horizontal_bar_stimuli),
+            *horizontal_bar_stimuli[-2:0:-1],
             None,
         ]
         angles = None
@@ -464,50 +512,78 @@ def run_trial(condition):
             "blank_grid",
             *horizontal_bar_ids,
             "blank_grid",
-            *reversed(horizontal_bar_ids),
+            *horizontal_bar_ids[-2:0:-1],
             "blank_grid",
         ]
     else:
         raise ValueError(f"Unknown condition: {condition}")
 
-    log("trial_start", condition=condition, trial_number=trial_number)
-    opacity = 1.0
-    opacity_step = 0.9 / len(stimuli)
-    previous_state = None
-
-    for index, stimulus in enumerate(stimuli):
-        angle = angles[index] if angles else None
-        middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
-        state = {
-            "condition": condition,
-            "index": index,
-            "stimulus_id": stimulus_ids[index],
-            "angle": angle,
-            "blank_grid": stimulus is None,
-        }
-        opacity -= opacity_step
-        state["opacity"] = opacity if stimulus is not None else 0
-        active_grid = grid
-        active_stimulus = stimulus
-        active_stimulus_opacity = state["opacity"]
-        if previous_state:
-            window.callOnFlip(lambda state=previous_state: log("stimulus_offset", **state))
-        window.callOnFlip(tone_for(angle, stimulus is None, middle_bar).play)
-        window.callOnFlip(lambda state=state: log_design_event("stimulus_onset", "visual", state))
-        window.callOnFlip(lambda state=state: log("reference_flip", **state))
-        draw_scene()
-        previous_state = state
-        wait(2)
+    log("trial_start", condition=condition, trial_number=trial_number,
+        design_mode=design_mode)
 
     active_grid = grid
     active_stimulus = None
-    window.callOnFlip(lambda state=previous_state: log("stimulus_offset", **state))
-    window.callOnFlip(close_design_event)
+    if design_mode != "Visual perception":
+        # The latest imagery-only design plays the first low tone before the grid flip.
+        if design_mode == "Pure imagery":
+            low_tone.play()
+        else:
+            window.callOnFlip(low_tone.play)
+        window.callOnFlip(lambda: log_design_event(
+            "preview_start", "preview", {"condition": condition}))
+        draw_scene()
+        if design_mode == "Pure imagery":
+            log("grid_preview_start", condition=condition)
+        wait(2)
+        low_tone.play()
+        wait(2)
+
+    if design_mode != "Pure imagery":
+        opacity = 1.0
+        opacity_step = 0.9 / len(stimuli)
+        visual_loops = 3 if design_mode == "Visual perception" else 1
+        for loop in range(1, visual_loops + 1):
+            for index, stimulus in enumerate(stimuli):
+                angle = angles[index] if angles else None
+                middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
+                if design_mode == "Visual guide + imagery":
+                    opacity -= opacity_step
+                state = {
+                    "condition": condition,
+                    "loop": loop,
+                    "index": index,
+                    "stimulus_id": stimulus_ids[index],
+                    "angle": angle,
+                    "blank_grid": stimulus is None,
+                    "opacity": (1.0 if design_mode == "Visual perception" else opacity)
+                               if stimulus is not None else 0,
+                }
+                active_stimulus = stimulus
+                active_stimulus_opacity = state["opacity"]
+                window.callOnFlip(tone_for(angle, stimulus is None, middle_bar).play)
+                window.callOnFlip(lambda state=state: log_design_event(
+                    "stimulus_onset", "visual", state))
+                draw_scene()
+                wait(2)
+
+    if design_mode == "Visual perception":
+        active_grid = None
+        active_stimulus = None
+        draw_bullseye()
+        window.callOnFlip(close_design_event)
+        window.flip()
+        log("trial_end", condition=condition)
+        return True
+
+    active_stimulus = None
+    if design_mode == "Pure imagery":
+        high_tone.play()
     window.callOnFlip(lambda: log("imagery_onset", condition=condition))
     draw_scene()
     log("imagery_start", condition=condition)
 
-    for loop in (1, 2):
+    imagery_loops = 2 if design_mode == "Visual guide + imagery" else 3
+    for loop in range(1, imagery_loops + 1):
         for index, stimulus in enumerate(stimuli):
             angle = angles[index] if angles else None
             middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
@@ -549,7 +625,7 @@ def save_fmri_timing_csv(run_label, timestamp):
         writer = csv.DictWriter(
             file,
             fieldnames=[
-                "subject_id", "run_number", "tr_seconds", "tr_index",
+                "subject_id", "run_number", "design_mode", "tr_seconds", "tr_index",
                 "trigger_time_seconds", "seconds_from_first_trigger",
                 "seconds_from_task_start", "phase",
             ],
@@ -559,6 +635,7 @@ def save_fmri_timing_csv(run_label, timestamp):
             writer.writerow({
                 "subject_id": subject_id,
                 "run_number": run_number,
+                "design_mode": design_mode,
                 "tr_seconds": tr_seconds,
                 "tr_index": index,
                 "trigger_time_seconds": f"{trigger_time:.6f}",
@@ -598,7 +675,7 @@ def save_fmri_timing_csv(run_label, timestamp):
         writer = csv.DictWriter(
             file,
             fieldnames=[
-                "phase", "condition", "loop", "index", "stimulus_id", "angle", "blank_grid",
+                "design_mode", "phase", "condition", "loop", "index", "stimulus_id", "angle", "blank_grid",
                 "aperture_path", "onset_seconds_from_first_trigger", "onset_seconds_from_task_start",
                 "tr_index", "duration_seconds", "trial_number", "opacity", "offset_seconds_from_first_trigger",
             ],
@@ -610,6 +687,7 @@ def save_fmri_timing_csv(run_label, timestamp):
                 continue
             offset = sample.get("offset")
             writer.writerow({
+                "design_mode": design_mode,
                 "phase": sample["phase"],
                 "condition": sample["condition"],
                 "loop": sample.get("loop", ""),
@@ -630,7 +708,7 @@ def save_fmri_timing_csv(run_label, timestamp):
     volume_path = LOG_DIRECTORY / f"fmri_volumes_{subject_id}_{run_label}_{timestamp}.csv"
     with volume_path.open("w", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=[
-            "tr_index", "phase", "onset_seconds_from_first_trigger",
+            "tr_index", "design_mode", "phase", "onset_seconds_from_first_trigger",
             "duration_seconds", "boundary_source", "samples_json",
         ])
         writer.writeheader()
@@ -638,7 +716,9 @@ def save_fmri_timing_csv(run_label, timestamp):
             following = trigger_times[index + 1] if index + 1 < len(trigger_times) else None
             run_end = next((e["time"] for e in reversed(events)
                             if e["event"] in {"display_cleared", "experiment_end"}), None)
-            offset = following if following is not None else run_end
+            offset = following if following is not None else (
+                onset + tr_seconds if run_end is not None else None
+            )
             overlaps = []
             if offset is not None:
                 for sample_index, sample in enumerate(design_events):
@@ -652,10 +732,11 @@ def save_fmri_timing_csv(run_label, timestamp):
                                          "onset_within_volume": start - onset,
                                          "duration_seconds": end - start})
             writer.writerow({"tr_index": index + 1,
+                             "design_mode": design_mode,
                              "phase": "dummy" if index < SCANNER_DUMMY_TRS else "task",
                              "onset_seconds_from_first_trigger": onset - first_trigger_time,
                              "duration_seconds": "" if offset is None else offset - onset,
-                             "boundary_source": "next_trigger" if following is not None else "run_end" if offset is not None else "pending",
+                             "boundary_source": "next_trigger" if following is not None else "nominal_last_tr" if offset is not None else "pending",
                              "samples_json": json.dumps(overlaps)})
 
     save_pyprf_frames(run_label, timestamp)
@@ -680,6 +761,7 @@ def run_experiment():
     is_fmri = experiment_type == "fMRI"
     if is_fmri:
         event.clearEvents(eventType="keyboard")
+        window.flip()  # Show only the Gaussian background during dummy triggers.
         log(
             "scanner_dummy_trigger_wait_start",
             dummy_trs=SCANNER_DUMMY_TRS,
@@ -689,14 +771,16 @@ def run_experiment():
         wait_for_tr(SCANNER_DUMMY_TRS + 1)
         log("scanner_run_start", tr_index=tr_count)
 
-    trials = ["SECTOR", "VERTICAL_BAR", "HORIZONTAL_BAR"]
-    random.shuffle(trials)
+    trials = ["SECTOR", "VERTICAL_BAR", "HORIZONTAL_BAR", "SECTOR_COUNTERCLOCKWISE"]
     log("trial_schedule", conditions=trials)
     log("experiment_start", timing_source="scanner_trigger" if is_fmri else "system_clock")
-    rest(1)
+    rest(INITIAL_REST_TRS * tr_seconds)
     for trial_number, condition in enumerate(trials, start=1):
         run_trial(condition)
-        rest(1, checkpoint=True)
+        if trial_number == len(trials):
+            rest(FINAL_REST_TRS * tr_seconds, checkpoint=True)
+        else:
+            rest(INTER_TRIAL_REST_TRS * tr_seconds, checkpoint=True)
 
     close_design_event()
     if is_fmri:
