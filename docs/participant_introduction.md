@@ -53,7 +53,8 @@ The **vertical bar** moves from left to right, goes outside the grid for one
 position, then moves from right to left and goes outside once more.
 The **horizontal bar** follows the same pattern from bottom to top and back.
 
-**Start directly at the first visible edge bar.** At an outside-grid position,
+**Start the bar trial with one extra blank grid and a high tone**, then move to
+the first visible edge bar. Later cycles start directly at the visible edge bar. At an outside-grid position,
 the grid stays visible but the bar is absent. In imagery, imagine that the bar
 has moved outside the circle. At the next position tone, return to the adjacent
 edge bar and travel back across the grid. Each outside-grid step lasts one
@@ -61,9 +62,10 @@ position interval, just like a visible bar position.
 
 ![Complete vertical-bar and horizontal-bar cycles, including outside-grid steps.](participant_figures/04_bar_cycles.png)
 
-*Figure 4. Read each pair of rows left to right: steps 1–8, then 9–16. Step 8 is
-outside the far edge; step 16 is outside the starting edge. Repeat from step 1
-for the next cycle. Outside-grid steps are part of the trial, not a rest break.*
+*Figure 4. Read each pair of rows left to right: steps 1–9, then 10–17. Step 1 is
+outside the starting edge, step 9 is outside the far edge, and step 17 is
+outside the starting edge. For later cycles, skip step 1 and repeat from step 2,
+so there is only one blank between cycles. Outside-grid steps are part of the trial, not a rest break.*
 
 <!-- pagebreak -->
 
@@ -99,8 +101,8 @@ fixation.
 
 **Watch three complete cycles** of the visible shape. Keep your eyes at fixation
 and let the shape move through the surrounding grid. Do not follow it with your
-eyes. These trials start without the preparatory two-tone preview used in
-imagery runs.
+eyes. These trials start with the same four-second grid and two-tone
+preparation as imagery runs.
 
 <!-- pagebreak -->
 
@@ -111,14 +113,15 @@ Hold the shape there until the next position tone. At the usual TR of one
 second, position tones are two seconds apart.
 
 - A **low tone** marks an ordinary position.
-- A **high tone** marks a landmark: the top, right, bottom, or left sector
-  position; the central bar; or a bar's outside-grid position.
+- A **high tone** marks sector cardinal positions, the central bar, and a
+  bar's outside-grid positions. Each bar trial starts with one extra high tone and
+  a blank grid before the first visible edge bar; later cycles skip this extra blank.
 - A high tone can therefore occur within a cycle. It does not always mean that
   a new trial or a rest has started.
 
-Before an imagery trial, you will hear **two low preparation tones**, two seconds
-apart. Use this time to prepare the correct shape, starting position, and
-direction. Pure imagery also has a brief high onset tone immediately before
+Before every trial, you will hear **two low preparation tones**, two seconds
+apart. The first position starts two seconds after the second preparation
+tone. Use this time to prepare the correct shape, starting position, and direction. Pure imagery also has a brief high onset tone immediately before
 the position sequence. Follow the regular position rhythm after preparation.
 
 ## Beginning, breaks, and finishing
@@ -130,8 +133,8 @@ trial. This initial rest lasts **10 scanner intervals**, usually 10 seconds.
 Between trials there is also a **10-interval rest**. The next trial's grid is
 already visible during this rest. **A visible grid alone does not mean you
 should start imagining.** Rest during the silent break; begin the next sequence
-when its tones start. Imagery trials first give the two preparation tones;
-perception trials start with the first position tone.
+after the two preparation tones. All run types use the same preparation
+period before the first position tone.
 
 After the last counterclockwise sector trial, keep looking at fixation for the
 **10-interval final rest**. Fixation remains visible while the run finishes and

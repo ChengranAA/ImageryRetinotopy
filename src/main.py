@@ -543,13 +543,14 @@ def run_trial(condition):
             stimulus_ids = [stimulus_ids[index] for index in order]
     elif condition == "VERTICAL_BAR":
         grid = bar_grid
-        # One outside-grid step per turn; start directly at the first visible bar.
-        stimuli = [*bar_stimuli, None, *reversed(bar_stimuli), None]
+        # Include the initial blank once per trial; later cycles skip it.
+        stimuli = [None, *bar_stimuli, None, *reversed(bar_stimuli), None]
         angles = None
-        stimulus_ids = [*bar_ids, "blank_grid", *reversed(bar_ids), "blank_grid"]
+        stimulus_ids = ["blank_grid", *bar_ids, "blank_grid", *reversed(bar_ids), "blank_grid"]
     elif condition == "HORIZONTAL_BAR":
         grid = horizontal_bar_grid
         stimuli = [
+            None,
             *horizontal_bar_stimuli,
             None,
             *reversed(horizontal_bar_stimuli),
@@ -557,6 +558,7 @@ def run_trial(condition):
         ]
         angles = None
         stimulus_ids = [
+            "blank_grid",
             *horizontal_bar_ids,
             "blank_grid",
             *reversed(horizontal_bar_ids),
@@ -570,20 +572,19 @@ def run_trial(condition):
 
     active_grid = grid
     active_stimulus = None
-    if design_mode != "Visual perception":
-        # The latest imagery-only design plays the first low tone before the grid flip.
-        if design_mode == "Pure imagery":
-            low_tone.play()
-        else:
-            window.callOnFlip(low_tone.play)
-        window.callOnFlip(lambda: log_design_event(
-            "preview_start", "preview", {"condition": condition}))
-        draw_scene()
-        if design_mode == "Pure imagery":
-            log("grid_preview_start", condition=condition)
-        wait(2)
+    # The latest imagery-only design plays the first low tone before the grid flip.
+    if design_mode == "Pure imagery":
         low_tone.play()
-        wait(2)
+    else:
+        window.callOnFlip(low_tone.play)
+    window.callOnFlip(lambda: log_design_event(
+        "preview_start", "preview", {"condition": condition}))
+    draw_scene()
+    if design_mode == "Pure imagery":
+        log("grid_preview_start", condition=condition)
+    wait(2)
+    low_tone.play()
+    wait(2)
 
     if design_mode != "Pure imagery":
         opacity = 1.0
@@ -591,6 +592,8 @@ def run_trial(condition):
         visual_loops = 3 if design_mode == "Visual perception" else 1
         for loop in range(1, visual_loops + 1):
             for index, stimulus in enumerate(stimuli):
+                if angles is None and index == 0 and loop > 1:
+                    continue
                 angle = angles[index] if angles else None
                 middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
                 if design_mode == "Visual guide + imagery":
@@ -632,6 +635,8 @@ def run_trial(condition):
     imagery_loops = 2 if design_mode == "Visual guide + imagery" else 3
     for loop in range(1, imagery_loops + 1):
         for index, stimulus in enumerate(stimuli):
+            if angles is None and index == 0 and (loop > 1 or design_mode == "Visual guide + imagery"):
+                continue
             angle = angles[index] if angles else None
             middle_bar = stimulus_ids[index] in {"vertical_bar_03", "horizontal_bar_03"}
             tone_for(angle, stimulus is None, middle_bar).play()

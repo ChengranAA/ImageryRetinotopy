@@ -123,11 +123,12 @@ fig.subplots_adjust(wspace=0.2)
 save(fig, "03_sector_directions.png")
 
 # 4. Complete bar cycles: seven positions, one outside step, return, outside.
-sequence = [*range(7), None, *range(6, -1, -1), None]
-fig, axes = plt.subplots(4, 8, figsize=(13, 7.1))
+sequence = [None, *range(7), None, *range(6, -1, -1), None]
+fig, axes = plt.subplots(4, 9, figsize=(13, 7.1))
 for kind_index, kind in enumerate(("vertical", "horizontal")):
+    axes[kind_index * 2 + 1, -1].axis("off")
     for i, position in enumerate(sequence):
-        ax = axes[kind_index * 2 + i // 8, i % 8]
+        ax = axes[kind_index * 2 + i // 9, i % 9]
         screen(ax, kind, position)
         ax.set_title(f"Step {i + 1}", fontsize=9, pad=1)
         if position is None:
